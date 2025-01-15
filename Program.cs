@@ -2,6 +2,7 @@ using Library.Foundation.Services;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddTransient<IAuthorService, AuthorService>();
 builder.Services.AddTransient<IBookService, BookService>();
+builder.Services.AddTransient<IStorageBroker, StorageBroker>();
 
 // Add services to the container.
 
