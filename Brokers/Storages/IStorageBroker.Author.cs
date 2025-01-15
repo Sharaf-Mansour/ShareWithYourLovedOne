@@ -1,10 +1,10 @@
-﻿using library.Models;
-namespace library.Brokers.Storages;
+﻿using Library.Models;
+namespace Library.Brokers.Storages;
 public partial interface IStorageBroker
 {
     ValueTask InsertAuthorAsync(Author author);
     ValueTask <List<Author>> SelectAllAuthorsAsync();
-    ValueTask <Author> SelectAuthorByIdAsync(int authorId);
+    ValueTask <Author?> SelectAuthorByIdAsync(int author_id);
     ValueTask UpdateAuthorAsync(Author author);
-    ValueTask DeleteAuthorAsync(int authorId);
+    ValueTask DeleteAuthorAsync(int author_id);
 }

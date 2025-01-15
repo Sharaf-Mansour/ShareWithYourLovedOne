@@ -1,6 +1,6 @@
-@library_HostAddress = http://localhost:5070
+@Library_HostAddress = http://localhost:5070
 
-GET {{library_HostAddress}}/weatherforecast/
+GET {{Library_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###

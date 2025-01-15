@@ -1,3 +1,2 @@
-﻿namespace library.Brokers.Storages;
+﻿namespace Library.Brokers.Storages;
 public partial interface IStorageBroker;
-

@@ -1,12 +1,6 @@
 ﻿using Dapper;
-using library.Models;
-using Microsoft.Data.Sqlite;
-namespace library.Brokers.Storages;
-
-/* 
- public int author_id { get; set; }
-    public string name { get; set; }
- */
+using Library.Models;
+namespace Library.Brokers.Storages;
 public partial class StorageBroker : IStorageBroker
 {
     public async ValueTask InsertAuthorAsync(Author author)
@@ -20,19 +14,19 @@ public partial class StorageBroker : IStorageBroker
         using var connection = CreateConnection();
         return (await connection.QueryAsync<Author>("SELECT * FROM Author")).ToList();
     }
-    public async ValueTask<Author> SelectAuthorByIdAsync(int authorId)
+    public async ValueTask<Author?> SelectAuthorByIdAsync(int author_id)
     {
         using var connection = CreateConnection();
-        return await connection.QueryFirstOrDefaultAsync<Author>("SELECT * FROM Author WHERE author_id = @author_id", new { author_id = authorId });
+        return await connection.QueryFirstOrDefaultAsync<Author>("SELECT * FROM Author WHERE author_id = @author_id", new {  author_id });
     }
     public async ValueTask UpdateAuthorAsync(Author author)
     {
         using var connection = CreateConnection();
         await connection.ExecuteAsync("UPDATE Author SET name = @name WHERE author_id = @author_id", author);
     }
-    public async ValueTask DeleteAuthorAsync(int authorId)
+    public async ValueTask DeleteAuthorAsync(int author_id)
     {
         using var connection = CreateConnection();
-        await connection.ExecuteAsync("DELETE FROM Author WHERE author_id = @author_id", new { author_id = authorId });
+        await connection.ExecuteAsync("DELETE FROM Author WHERE author_id = @author_id", new { author_id });
     }
 }

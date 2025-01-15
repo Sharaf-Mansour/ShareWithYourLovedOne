@@ -1,4 +1,4 @@
-using library.Foundation.Services;
+using Library.Foundation.Services;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddTransient<IAuthorService, AuthorService>();
 builder.Services.AddTransient<IBookService, BookService>();
