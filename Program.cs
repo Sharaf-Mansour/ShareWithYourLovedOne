@@ -1,3 +1,4 @@
+using Library.Brokers.Storages;
 using Library.Foundation.Services;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddTransient<IAuthorService, AuthorService>();
