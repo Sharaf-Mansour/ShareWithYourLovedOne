@@ -1,5 +1,7 @@
 using Library.Brokers.Storages;
 using Library.Foundation.Services;
+using Library.Brokers.Storages;
+using Library.Controllers;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddTransient<IAuthorService, AuthorService>();
 builder.Services.AddTransient<IBookService, BookService>();
@@ -23,6 +25,6 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
-app.MapControllers();
+app.MapAuthorController();
 
 app.Run();
