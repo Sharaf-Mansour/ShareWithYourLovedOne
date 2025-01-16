@@ -1,6 +1,6 @@
 ﻿using Library.Foundation.Services;
 using Library.Models;
-namespace library.Controllers;
+namespace Library.Controllers;
 public static partial class ControllersExtentions
 {
     public static async ValueTask<IResult> GetAllBooksAsync(IBookService bookService)

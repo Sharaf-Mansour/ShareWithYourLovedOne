@@ -1,4 +1,4 @@
-﻿namespace library.Controllers;
+﻿namespace Library.Controllers;
 public static partial class ControllersExtentions
 {
     public static WebApplication MapBookController(this WebApplication app)
