@@ -1,6 +1,7 @@
-using Library.Brokers.Storages;
-using Library.Foundation.Services;
-using Library.Controllers;
+global using Library.Brokers.Storages;
+global using Library.Foundation.Services;
+global using Library.Controllers;
+global using Library.Models;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddTransient<IAuthorService, AuthorService>();
 builder.Services.AddTransient<IBookService, BookService>();
