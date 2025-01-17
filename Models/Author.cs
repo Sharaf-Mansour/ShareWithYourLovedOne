@@ -1,6 +1,5 @@
 ﻿namespace Library.Models;
-public record Author
+public record Author : Base
 {
-    public int id { get; set; }
     public string? name { get; set; }
 }

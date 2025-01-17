@@ -16,7 +16,7 @@ public static partial class ControllersExtentions
     public static async ValueTask<IResult> CreateBookAsync(IBookService bookService, Book book)
     {
         await bookService.AddBookAsync(book);
-        return Results.Created($"/api/Books/{book.book_id}", book);
+        return Results.Created($"/api/Books/{book.id}", book);
     }
     public static async ValueTask<IResult> UpdateBookAsync(IBookService bookService, Book book, int bookID)
     {

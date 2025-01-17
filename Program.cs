@@ -3,8 +3,9 @@ global using Library.Foundation.Services;
 global using Library.Models;
 global using Library.Controllers;
 using Scalar.AspNetCore;
+
 var builder = WebApplication.CreateBuilder(args);
-//var appVersion = builder.Configuration.GetValue<string>("AppVersion") ?? "1.0.0";
+var appVersion = builder.Configuration.GetValue<string>("AppVersion") ?? "1.0.0";
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddTransient<IAuthorService, AuthorService>();
 builder.Services.AddTransient<IBookService, BookService>();
@@ -39,10 +40,9 @@ app.MapScalarApiReference(options =>
 app.MapAuthorController().MapBookController();
 
 app.UseHttpsRedirection();
-//app.MapGet("/v", () => appVersion);
+app.MapGet("/v", () => appVersion);
 app.MapGet("/datetime", () => DateTime.UtcNow.ToString("yyyy-MM-dd"));
-app.MapGet("/s", () => Results.Redirect("/scalar/v1"));
-app.MapGet("/", () => Results.StatusCode(503));
+app.MapGet("/", () => Results.Redirect("/scalar/v1"));
 
 //app.UseAuthorization();
 
