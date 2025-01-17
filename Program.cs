@@ -24,17 +24,18 @@ app.MapScalarApiReference(options =>
         .WithDefaultHttpClient(ScalarTarget.JavaScript, ScalarClient.Axios)
         .WithCustomCss($$"""
             .open-api-client-button { display: none !important; }
-            a[target="_blank"].darklight-reference-promo { display: none !important; }
-            .darklight-reference-switch::before {
+            a[target="_blank"].no-underline { display: none !important; }
+            .darklight-reference { display: flex;flex-flow: row;}
+            .darklight-reference::before {
                 content: "LORD AROЯA" !important;
-                font-size: 27px !important;
-            }
-            .darklight-reference-switch::after {
-                content: " v{{""}}" !important;
                 font-size: 22px !important;
+                }
+            .darklight-reference::after {
+                content: "{{appVersion}}" !important;
+                font-size: 20px !important;
             }
-        """)
-        .WithFavicon(app.Configuration.GetValue<string>("FavIcon") ?? "");
+        """);
+    //.WithFavicon(app.Configuration.GetValue<string>("FavIcon") ?? "");
 });
 
 app.MapAuthorController().MapBookController();
