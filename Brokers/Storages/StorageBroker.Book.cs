@@ -1,5 +1,4 @@
 ﻿using Dapper;
-using Library.Models;
 namespace Library.Brokers.Storages;
 public partial class StorageBroker : IStorageBroker
 {
@@ -11,7 +10,7 @@ public partial class StorageBroker : IStorageBroker
     public async ValueTask<List<Book>> SelectAllBooksAsync()
     {
         using var connection = CreateConnection();
-        return (await connection.QueryAsync<Book>("SELECT * FROM Book")).ToList();
+        return (await connection.QueryAsync<Book>("SELECT * FROM Book")).AsList();
     }
     public async ValueTask<Book?> SelectBookByIdAsync(int book_id)
     {

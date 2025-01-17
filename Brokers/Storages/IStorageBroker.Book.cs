@@ -1,6 +1,4 @@
-﻿using Library.Models;
-
-namespace Library.Brokers.Storages;
+﻿namespace Library.Brokers.Storages;
 public partial interface IStorageBroker
 {
     ValueTask InsertBookAsync(Book book);

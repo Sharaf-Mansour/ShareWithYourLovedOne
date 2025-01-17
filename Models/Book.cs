@@ -1,6 +1,5 @@
-﻿using library.Models;
-namespace Library.Models;
-public record Book : Base
+﻿namespace Library.Models;
+public record Book : BaseID
 {
     public string? title { get; set; }
     public int author_id { get; set; }

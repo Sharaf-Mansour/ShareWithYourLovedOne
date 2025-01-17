@@ -1,6 +1,4 @@
-﻿using Library.Models;
-
-namespace Library.Controllers;
+﻿namespace Library.Controllers;
 public partial class ControllersExtentions
 {
     public static WebApplication MapAuthorController(this WebApplication app)
@@ -51,7 +49,7 @@ public partial class ControllersExtentions
             Deletes a user author based on the provided author ID. This action is irreversible and should be performed with caution.
             """
             );
+
         return app;
     }
-
 }

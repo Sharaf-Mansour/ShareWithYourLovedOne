@@ -4,6 +4,7 @@ public static partial class ControllersExtentions
     public static WebApplication MapBookController(this WebApplication app)
     {
        var groupName = "Books";
+
         app.MapGet("/api/books",GetAllBooksAsync)
             .WithTags(groupName)
             .WithSummary(nameof(GetAllBooksAsync))
@@ -44,6 +45,7 @@ public static partial class ControllersExtentions
             Deletes a book based on the provided book ID. This action is irreversible and should be performed with caution.
             """
             );
+
         return app;
     }
 }
