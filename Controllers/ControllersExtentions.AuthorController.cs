@@ -1,4 +1,6 @@
-﻿namespace Library.Controllers;
+﻿using Library.Models;
+
+namespace Library.Controllers;
 public partial class ControllersExtentions
 {
     public static WebApplication MapAuthorController(this WebApplication app)

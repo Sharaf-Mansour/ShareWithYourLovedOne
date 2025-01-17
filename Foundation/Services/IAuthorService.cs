@@ -1,4 +1,6 @@
-﻿namespace Library.Foundation.Services;
+﻿using Library.Models;
+
+namespace Library.Foundation.Services;
 public interface IAuthorService
 {
     ValueTask AddAuthorAsync(Author author);
