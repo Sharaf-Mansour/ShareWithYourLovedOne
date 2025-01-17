@@ -6,11 +6,11 @@ public static partial class ControllersExtentions
         var books = await bookService.RetrieveAllBooksAsync();
         return Results.Ok(books);
     }
-    public static async ValueTask<IResult> GetBookByIdAsync(int bookID, IBookService bookService)
+    public static async ValueTask<IResult> GetBookByIdAsync(int id, IBookService bookService)
     {
-        if (bookID <= 0)
+        if (id <= 0)
             return Results.BadRequest("Invalid Id");
-        var book = await bookService.RetrieveBookByIdAsync(bookID);
+        var book = await bookService.RetrieveBookByIdAsync(id);
         return book is not null ? Results.Ok(book) : Results.NoContent();
     }
     public static async ValueTask<IResult> CreateBookAsync(IBookService bookService, Book book)
@@ -18,19 +18,19 @@ public static partial class ControllersExtentions
         await bookService.AddBookAsync(book);
         return Results.Created($"/api/Books/{book.id}", book);
     }
-    public static async ValueTask<IResult> UpdateBookAsync(IBookService bookService, Book book, int bookID)
+    public static async ValueTask<IResult> UpdateBookAsync(IBookService bookService, Book book, int id)
     {
-        if (bookID <= 0)
+        if (id <= 0)
             return Results.BadRequest("Invalid Id");
-        var updatedBook = await bookService.RetrieveBookByIdAsync(bookID);
+        var updatedBook = await bookService.RetrieveBookByIdAsync(id);
         return updatedBook is not null ? Results.Ok(updatedBook) : Results.NoContent();
     }
-    public static async ValueTask<IResult> DeleteBookAsync(IBookService bookService, int bookID)
+    public static async ValueTask<IResult> DeleteBookAsync(IBookService bookService, int id)
     {
-        if (bookID <= 0)
+        if (id <= 0)
             return Results.BadRequest("Invalid Id");
-        var book = await bookService.RetrieveBookByIdAsync(bookID);
-        await bookService.RemoveBookByIdAsync(bookID);
+        var book = await bookService.RetrieveBookByIdAsync(id);
+        await bookService.RemoveBookByIdAsync(id);
         return book is not null ? Results.Ok(book) : Results.NoContent();
     }
 }
