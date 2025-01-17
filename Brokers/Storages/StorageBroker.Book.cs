@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Library.Models;
 namespace Library.Brokers.Storages;
 public partial class StorageBroker : IStorageBroker
 {

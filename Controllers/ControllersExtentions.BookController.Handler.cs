@@ -1,4 +1,7 @@
-﻿namespace Library.Controllers;
+﻿using Library.Foundation.Services;
+using Library.Models;
+
+namespace Library.Controllers;
 public static partial class ControllersExtentions
 {
     public static async ValueTask<IResult> GetAllBooksAsync(IBookService bookService)
