@@ -1,7 +1,7 @@
-﻿namespace Library.Models;
-public class Book
+﻿using library.Models;
+namespace Library.Models;
+public record Book : Base
 {
-    public int book_id { get; set; }
     public string? title { get; set; }
     public int author_id { get; set; }
 }

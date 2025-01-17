@@ -1,5 +1,5 @@
 ﻿namespace library.Models;
-
-public class Base
+public record Base
 {
+    public int id { get; set; }
 }
