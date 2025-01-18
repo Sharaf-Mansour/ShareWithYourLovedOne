@@ -8,7 +8,7 @@ public partial class StorageBroker : IStorageBroker
         await connection.ExecuteAsync("INSERT INTO Author(author_id,name) VALUES (@author_id, @name )", author);
     }
 
-    public async ValueTask<List<Author>> SelectAllAuthorsAsync()
+    public async ValueTask<IEnumerable<Author>> SelectAllAuthorsAsync()
     {
         using var connection = CreateConnection();
         return (await connection.QueryAsync<Author>("SELECT * FROM Author")).AsList();
