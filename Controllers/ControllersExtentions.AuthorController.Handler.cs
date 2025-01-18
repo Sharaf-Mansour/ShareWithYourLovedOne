@@ -23,7 +23,7 @@ public static partial class ControllersExtentions
 
     public static async ValueTask<IResult> UpdateAuthorAsync(int id, IAuthorService AuthorService, Author Author)
     {
-        if ((id <= 0) || (string.IsNullOrWhiteSpace(Author.Name))) 
+        if ((id <= 0) || (string.IsNullOrWhiteSpace(Author.Name)))
             return Results.BadRequest("Invalid Author");
         await AuthorService.ModifyAuthorAsync(Author with { Id = id });
         var updatedAuthor = await AuthorService.RetrieveAuthorByIdAsync(id);
