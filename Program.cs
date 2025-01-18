@@ -2,6 +2,8 @@
 global using Library.Foundation.Services;
 global using Library.Models;
 global using Library.Controllers;
+global using System.Text.Json.Serialization;
+global using Dapper;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
