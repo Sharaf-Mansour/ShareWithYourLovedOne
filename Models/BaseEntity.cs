@@ -1,5 +1,5 @@
 ﻿namespace Library.Models;
-public record BaseID
+public record BaseEntity
 {
     public int id { get; set; }
 }
