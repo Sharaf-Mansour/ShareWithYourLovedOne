@@ -17,7 +17,6 @@ builder.Services.AddOpenApi();
 
 var app = builder.Build();
 app.MapOpenApi();
-app.UseGlobalExceptionHandler();
 
 app.MapScalarApiReference(options =>
 {
@@ -48,6 +47,7 @@ app.UseHttpsRedirection();
 app.MapGet("/v", () => appVersion);
 app.MapGet("/datetime", () => DateTime.UtcNow.ToString("yyyy-MM-dd"));
 app.MapGet("/", () => Results.Redirect("/scalar/v1"));
+app.UseGlobalExceptionHandler();
 
 //app.UseAuthorization();
 
