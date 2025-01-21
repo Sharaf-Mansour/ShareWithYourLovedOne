@@ -4,7 +4,7 @@ public partial class StorageBroker : IStorageBroker
     public async ValueTask InsertBookAsync(Book book)
     {
         using var connection = CreateConnection();
-        await connection.ExecuteAsync("INSERT INTO Book(Id,Title,AuthorId) VALUES (@Id, @Title,@Id)",book);
+        await connection.ExecuteAsync("INSERT INTO Book(Id,Title,AuthorId) VALUES (@Id, @Title,@AuthorId)",book);
     }
     public async ValueTask<IEnumerable<Book>> SelectAllBooksAsync()
     {
@@ -19,7 +19,7 @@ public partial class StorageBroker : IStorageBroker
     public async ValueTask UpdateBookAsync(Book book)
     {
         using var connection = CreateConnection();
-        await connection.ExecuteAsync("UPDATE Book SET Title = @Title, AuthorId = @Id WHERE Id = @Id", book);
+        await connection.ExecuteAsync("UPDATE Book SET Title = @Title, AuthorId = @AuthorId WHERE Id = @Id", book);
     }
     public async ValueTask DeleteBookAsync(int Id)
     {
