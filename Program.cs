@@ -2,7 +2,10 @@
 global using Library.Foundation.Services;
 global using Library.Models;
 global using Library.Controllers;
+global using System.Text.Json.Serialization;
+global using Dapper;
 using Scalar.AspNetCore;
+using Arora.GlobalExceptionHandler;
 
 var builder = WebApplication.CreateBuilder(args);
 var appVersion = builder.Configuration.GetValue<string>("AppVersion") ?? "1.0.0";
@@ -14,6 +17,7 @@ builder.Services.AddOpenApi();
 
 var app = builder.Build();
 app.MapOpenApi();
+app.UseGlobalExceptionHandler();
 
 app.MapScalarApiReference(options =>
 {

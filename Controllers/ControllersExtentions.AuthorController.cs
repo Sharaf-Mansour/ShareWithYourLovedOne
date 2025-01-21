@@ -39,7 +39,7 @@ public partial class ControllersExtentions
             """
             Updates the details of an existing user author identified by the given author ID. Only authorized users can perform this action.
             """
-            );
+            ).Produces<Author>(200).Produces(204).ProducesProblem(400);
 
         app.MapDelete("/api/authors/{id}", DeleteAuthorAsync)
             .WithTags(groupName)
@@ -48,7 +48,7 @@ public partial class ControllersExtentions
             """
             Deletes a user author based on the provided author ID. This action is irreversible and should be performed with caution.
             """
-            );
+            ).Produces<Author>(200).Produces(204).ProducesProblem(400);
 
         return app;
     }

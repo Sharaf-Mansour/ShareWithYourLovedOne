@@ -1,6 +1,8 @@
 ﻿namespace Library.Models;
 public record Book : BaseEntity
 {
-    public string? title { get; set; }
-    public int author_id { get; set; }
+    [JsonPropertyName("title")]
+    public string? Title { get; set; }
+    [JsonPropertyName("author_id")]
+    public int AuthorId { get; set; }
 }
