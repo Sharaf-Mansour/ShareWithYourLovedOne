@@ -2,6 +2,6 @@
 namespace Library.Brokers.Storages;
 public partial class StorageBroker (IConfiguration configuration) : IStorageBroker
 {
-    string? connectionString = configuration.GetConnectionString("DefaultConnection");
-    SqliteConnection CreateConnection() => new (connectionString);
+    string? ConnectionString => configuration.GetConnectionString("DefaultConnection");
+    SqliteConnection CreateConnection() => new (ConnectionString);
 }
