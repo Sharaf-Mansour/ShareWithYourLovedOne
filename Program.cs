@@ -1,5 +1,5 @@
 ﻿global using Library.Brokers.Storages;
-global using Library.Foundation.Services;
+global using Library.Services.Foundation;
 global using Library.Models;
 global using Library.Controllers;
 global using System.Text.Json.Serialization;

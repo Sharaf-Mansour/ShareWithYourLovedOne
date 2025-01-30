@@ -1,5 +1,5 @@
-﻿namespace Library.Foundation.Services;
-public class AuthorService (IStorageBroker storageBroker): IAuthorService
+﻿namespace Library.Services.Foundation;
+public class AuthorService(IStorageBroker storageBroker) : IAuthorService
 {
     public async ValueTask AddAuthorAsync(Author author) => await storageBroker.InsertAuthorAsync(author);
     public async ValueTask<IEnumerable<Author>> RetrieveAllAuthorsAsync() => await storageBroker.SelectAllAuthorsAsync();

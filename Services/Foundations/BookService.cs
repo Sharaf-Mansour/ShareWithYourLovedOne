@@ -1,5 +1,5 @@
-﻿namespace Library.Foundation.Services;
-public class BookService(IStorageBroker storageBroker): IBookService
+﻿namespace Library.Services.Foundation;
+public class BookService(IStorageBroker storageBroker) : IBookService
 {
     public async ValueTask AddBookAsync(Book book) => await storageBroker.InsertBookAsync(book);
     public async ValueTask<IEnumerable<Book>> RetrieveAllBooksAsync() => await storageBroker.SelectAllBooksAsync();

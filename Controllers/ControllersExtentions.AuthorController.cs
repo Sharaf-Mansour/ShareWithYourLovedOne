@@ -5,7 +5,7 @@ public partial class ControllersExtentions
     {
         var groupName = "Authors";
 
-        app.MapGet("/api/authors", GetAllAuthorsAsync)
+        app.MapGet("/api/authors",GetAllAuthorsAsync)
             .WithTags(groupName)
             .WithSummary(nameof(GetAllAuthorsAsync))
             .WithDescription(
@@ -23,18 +23,18 @@ public partial class ControllersExtentions
             """
             ).Produces<Author>(200).Produces(204).ProducesProblem(400);
 
-        app.MapPost("/api/authors", CreateAuthorAsync)
+        app.MapPost("/api/authors", PostAuthorAsync)
             .WithTags(groupName)
-            .WithSummary(nameof(CreateAuthorAsync))
+            .WithSummary(nameof(PostAuthorAsync))
             .WithDescription(
             """
             Creates a new user author with the provided information. Ensure that the data meets the required validation criteria.
             """
             ).Produces<Author>(201).ProducesProblem(400);
 
-        app.MapPut("/api/authors/{id}", UpdateAuthorAsync)
+        app.MapPut("/api/authors/{id}", PutAuthorAsync)
             .WithTags(groupName)
-            .WithSummary(nameof(UpdateAuthorAsync))
+            .WithSummary(nameof(PutAuthorAsync))
             .WithDescription(
             """
             Updates the details of an existing user author identified by the given author ID. Only authorized users can perform this action.

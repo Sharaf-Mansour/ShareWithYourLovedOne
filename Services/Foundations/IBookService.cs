@@ -1,4 +1,4 @@
-﻿namespace Library.Foundation.Services;
+﻿namespace Library.Services.Foundation;
 public interface IBookService
 {
     ValueTask AddBookAsync(Book book);

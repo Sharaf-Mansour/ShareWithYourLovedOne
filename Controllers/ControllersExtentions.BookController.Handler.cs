@@ -1,4 +1,6 @@
-﻿namespace Library.Controllers;
+﻿using Library.Services.Foundation;
+
+namespace Library.Controllers;
 public static partial class ControllersExtentions
 {
     public static async ValueTask<IResult> GetAllBooksAsync(IBookService bookService)
@@ -13,12 +15,12 @@ public static partial class ControllersExtentions
         var book = await bookService.RetrieveBookByIdAsync(id);
         return book is not null ? Results.Ok(book) : Results.NoContent();
     }
-    public static async ValueTask<IResult> CreateBookAsync(IBookService bookService, Book book)
+    public static async ValueTask<IResult> PostBookAsync(IBookService bookService, Book book)
     {
         await bookService.AddBookAsync(book);
         return Results.Created($"/api/Books/{book.Id}", book);
     }
-    public static async ValueTask<IResult> UpdateBookAsync(IBookService bookService, Book book, int id)
+    public static async ValueTask<IResult> PutBookAsync(IBookService bookService, Book book, int id)
     {
         if (id <= 0)
             return Results.BadRequest("Invalid Id");

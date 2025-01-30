@@ -21,17 +21,17 @@ public static partial class ControllersExtentions
             Fetches the details of a specific book based on the provided book ID.
             """
             ).Produces<Author>(200).Produces(204).ProducesProblem(400);
-        app.MapPost("/api/books", CreateBookAsync)
+        app.MapPost("/api/books", PostBookAsync)
             .WithTags(groupName)
-            .WithSummary(nameof(CreateBookAsync))
+            .WithSummary(nameof(PostBookAsync))
             .WithDescription(
             """
             Creates a new book with the provided information. Ensure that the data meets the required validation criteria.
             """
             ).Produces<Author>(201).ProducesProblem(400);
-        app.MapPut("/api/books/{id}", UpdateBookAsync)
+        app.MapPut("/api/books/{id}", PutBookAsync)
             .WithTags(groupName)
-            .WithSummary(nameof(UpdateBookAsync))
+            .WithSummary(nameof(PutBookAsync))
             .WithDescription(
             """
             Updates the details of an existing book identified by the given book ID.
