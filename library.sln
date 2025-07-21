@@ -5,7 +5,7 @@ VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Library", "Library.csproj", "{F304D843-07E0-4AF8-82A9-E7CCE967658A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KiroShareWithYourLovedOn", "..\KiroShareWithYourLovedOn\KiroShareWithYourLovedOn.csproj", "{F8A22B92-134D-49E4-8BE6-8EC18E9FD159}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KiroShareWithYourLovedOne2", "..\KiroShareWithYourLovedOn\KiroShareWithYourLovedOne2.csproj", "{F8A22B92-134D-49E4-8BE6-8EC18E9FD159}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
