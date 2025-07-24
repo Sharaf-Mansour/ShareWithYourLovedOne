@@ -10,8 +10,8 @@ using Arora.GlobalExceptionHandler;
 var builder = WebApplication.CreateBuilder(args);
 var appVersion = builder.Configuration.GetValue<string>("AppVersion") ?? "1.0.0";
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddTransient<IAuthorService, AuthorService>();
-builder.Services.AddTransient<IBookService, BookService>();
+builder.Services.AddTransient<IOwnerService, OwnerService>();
+//builder.Services.AddTransient<IBookService, BookService>();
 builder.Services.AddTransient<IStorageBroker, StorageBroker>();
 builder.Services.AddOpenApi();
 
@@ -41,7 +41,7 @@ app.MapScalarApiReference(options =>
     //.WithFavicon(app.Configuration.GetValue<string>("FavIcon") ?? "");
 });
 
-app.MapAuthorController().MapBookController();
+app.MapOwnerController();//.MapBookController()
 
 app.UseHttpsRedirection();
 app.MapGet("/v", () => appVersion);
