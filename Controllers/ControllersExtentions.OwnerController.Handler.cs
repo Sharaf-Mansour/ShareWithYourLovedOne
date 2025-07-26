@@ -49,7 +49,18 @@ public static partial class ControllersExtentions
             return Results.BadRequest(ex.Message);
         }
     }
-
+    static async ValueTask<IResult> LoginAsync( DTO.LogInOwnerRecord loginOwner,  IOwnerService ownerService)
+    {
+        try
+        {
+            var ownerDetails = await ownerService.LoginAsync(loginOwner);
+            return Results.Ok(ownerDetails);
+        }
+        catch (Exception ex)
+        {
+            return Results.BadRequest(ex.Message);
+        }
+    }
     static async ValueTask<IResult> PutOwnerAsync(int id, IOwnerService OwnerService, DTO.AddOwnerRecord ownerUpdate)
     {
         //if (id <= 0) 
@@ -68,7 +79,7 @@ public static partial class ControllersExtentions
                 Email = ownerUpdate.Email,
                 Password = ownerUpdate.Password
             };
-            var updatedOwner = await OwnerService.ModifyOwnerAsync(owner with { ID = id });
+            var updatedOwner = await OwnerService.ModifyOwnerAsync(owner);
             //var updatedOwner = await OwnerService.RetrieveOwnerByIdAsync(id);
             return updatedOwner is not null ? Results.Ok(updatedOwner) : Results.NoContent();
         }
@@ -89,6 +100,19 @@ public static partial class ControllersExtentions
             return Results.BadRequest(ex.Message);
         }
     }
+    //static async ValueTask<IResult> GetOwnerShareableLinkByIdAsync(int id, IOwnerService OwnerService)
+    //{
+    //    try
+    //    {
+    //        var Owner = await OwnerService.RetrieveOwnerByIdAsync(id);
+    //        var shareableLink = $"https:/localhost:7016/{Owner.RouteToken}";
+    //        return Results.Ok(new { ShareLink = shareableLink });
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        return Results.BadRequest(ex.Message);
+    //    }
+    //}
     static async ValueTask<IResult> DeleteOwnerAsync(int id, IOwnerService OwnerService)
     {
         //if (id <= 0) return Results.BadRequest("Invalid Id");
