@@ -37,4 +37,19 @@ public static partial class ControllersExtentions
 
         return app;
     }
+
+    public static WebApplication MapPublicScheduleEndpoints(this WebApplication app)
+    {
+        var groupName = "Public Schedule";
+
+        // This is the PUBLIC endpoint that the share link points to.
+        // It takes the token from the URL and uses it to find the schedule.
+        app.MapGet("/api/schedule/{routeToken}", GetPublicScheduleByTokenAsync)
+            .WithTags(groupName)
+            .WithSummary("Get a public schedule using a share token.")
+            .Produces<IEnumerable<ScheduleEntry>>(200)
+            .Produces(404);
+
+        return app;
+    }
 }
