@@ -1,4 +1,5 @@
 ﻿using Library.Services.Foundation;
+using Library.Services.Orchestration;
 
 namespace Library.Controllers;
 public static partial class ControllersExtentions
@@ -78,6 +79,20 @@ public static partial class ControllersExtentions
         return Results.NoContent();
     }
 
+    private static async ValueTask<IResult> GetPublicScheduleByTokenAsync(
+        IScheduleOrchestrationService orchestrationService, // 💉 It asks for the General Contractor!
+        string routeToken)
+    {
+        try
+        {
+            var schedule = await orchestrationService.RetrievePublicScheduleByTokenAsync(routeToken);
+            return Results.Ok(schedule);
+        }
+        catch (Exception ex)
+        {
+            return Results.NotFound(new { Message = ex.Message });
+        }
+    }
 }
 
 //is we need to put them in another folder
