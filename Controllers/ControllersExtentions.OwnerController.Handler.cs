@@ -100,19 +100,19 @@ public static partial class ControllersExtentions
             return Results.BadRequest(ex.Message);
         }
     }
-    //static async ValueTask<IResult> GetOwnerShareableLinkByIdAsync(int id, IOwnerService OwnerService)
-    //{
-    //    try
-    //    {
-    //        var Owner = await OwnerService.RetrieveOwnerByIdAsync(id);
-    //        var shareableLink = $"https:/localhost:7016/{Owner.RouteToken}";
-    //        return Results.Ok(new { ShareLink = shareableLink });
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        return Results.BadRequest(ex.Message);
-    //    }
-    //}
+    static async ValueTask<IResult> GetOwnerShareableLinkByIdAsync(int id, IOwnerService OwnerService, HttpContext httpContext)
+    {
+        try
+        {
+            var Owner = await OwnerService.RetrieveOwnerByIdAsync(id);
+            var shareableLink = $"https:/localhost:7016/{Owner.RouteToken}";
+            return Results.Ok(new { ShareLink = shareableLink });
+        }
+        catch (Exception ex)
+        {
+            return Results.BadRequest(ex.Message);
+        }
+    }
     static async ValueTask<IResult> DeleteOwnerAsync(int id, IOwnerService OwnerService)
     {
         //if (id <= 0) return Results.BadRequest("Invalid Id");
