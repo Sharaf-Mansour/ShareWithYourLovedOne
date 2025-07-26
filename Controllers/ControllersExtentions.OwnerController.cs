@@ -62,15 +62,16 @@ public partial class ControllersExtentions
             Retrieves owner details using their public-facing unique route token.
             """
             ).Produces<Owner>(200).Produces(204).ProducesProblem(400);
-
-        //app.MapGet("/api/owners/{id}/shareableLink", GetOwnerShareableLinkByIdAsync)
-        //    .WithTags(groupName)
-        //    .WithSummary(nameof(GetOwnerShareableLinkByIdAsync))
-        //    .WithDescription(
-        //    """
-        //    for testing current output using id to get token and insert it in a shareable link (local host for now)
-        //    """
-        //    ).Produces<Owner>(200).Produces(204).ProducesProblem(400);
+        
+        //generating share link
+        app.MapGet("/api/owners/{id}/shareableLink", GetOwnerShareableLinkByIdAsync)
+            .WithTags(groupName)
+            .WithSummary(nameof(GetOwnerShareableLinkByIdAsync))
+            .WithDescription(
+            """
+            for testing current output using id to get token and insert it in a shareable link (local host for now)
+            """
+            ).Produces<Owner>(200).Produces(204).ProducesProblem(400);
 
         app.MapDelete("/api/owners/{id}", DeleteOwnerAsync)
             .WithTags(groupName)
