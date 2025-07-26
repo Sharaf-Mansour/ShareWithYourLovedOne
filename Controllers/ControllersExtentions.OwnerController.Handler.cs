@@ -105,7 +105,12 @@ public static partial class ControllersExtentions
         try
         {
             var Owner = await OwnerService.RetrieveOwnerByIdAsync(id);
-            var shareableLink = $"https:/localhost:7016/{Owner.RouteToken}";
+            if (Owner is null) 
+                return Results.NotFound("owner not found");
+            var request = httpContext.Request;
+            var baseUrl = $"{request.Scheme}://{request.Host}";
+            var shareableLink = $"{baseUrl}/{Owner.RouteToken}";
+            //var shareableLink = $"https:/localhost:7016/{Owner.RouteToken}";
             return Results.Ok(new { ShareLink = shareableLink });
         }
         catch (Exception ex)
