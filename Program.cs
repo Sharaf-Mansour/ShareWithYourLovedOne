@@ -4,9 +4,9 @@ global using Library.Models;
 global using Library.Controllers;
 global using System.Text.Json.Serialization;
 global using Dapper;
+global using Library.Services.Orchestration;
 using Scalar.AspNetCore;
 using Arora.GlobalExceptionHandler;
-//using Library.Services.Orchestration;
 
 var builder = WebApplication.CreateBuilder(args);
 var appVersion = builder.Configuration.GetValue<string>("AppVersion") ?? "1.0.0";
@@ -14,7 +14,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddTransient<IOwnerService, OwnerService>();
 builder.Services.AddTransient<IScheduleEntryService, ScheduleEntryService>();
 builder.Services.AddTransient<IStorageBroker, StorageBroker>();
-//builder.Services.AddTransient<IScheduleOrchestrationService, ScheduleOrchestrationService>();
+builder.Services.AddTransient<IScheduleOrchestrationService, ScheduleOrchestrationService>();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
@@ -43,7 +43,7 @@ app.MapScalarApiReference(options =>
     //.WithFavicon(app.Configuration.GetValue<string>("FavIcon") ?? "");
 });
 
-app.MapOwnerController().MapScheduleEntryEndpoints();
+app.MapOwnerController().MapScheduleEntryEndpoints().MapPublicScheduleEndpoints();
 
 app.UseHttpsRedirection();
 app.MapGet("/v", () => appVersion);
