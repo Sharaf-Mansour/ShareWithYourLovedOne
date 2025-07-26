@@ -36,6 +36,15 @@ public partial class ControllersExtentions
             """
             ).Produces<Owner>(201).ProducesProblem(400);
 
+        app.MapPost("/api/login", LoginAsync)
+            .WithTags(groupName)
+            .WithSummary(nameof(LoginAsync))
+            .WithDescription(
+            """
+            Validates owner credentials and returns their details upon success.
+            """
+            ).Produces<Owner>(201).ProducesProblem(400);
+
         app.MapPut("/api/owners/{id}", PutOwnerAsync)
             .WithTags(groupName)
             .WithSummary(nameof(PutOwnerAsync))
@@ -45,7 +54,7 @@ public partial class ControllersExtentions
             """
             ).Produces<Owner>(200).Produces(204).ProducesProblem(400);
 
-        app.MapGet("/{routeToken}", GetOwnerByRouteTokenAsync)
+        app.MapGet("api/owners/token/{routeToken}", GetOwnerByRouteTokenAsync)
             .WithTags(groupName)
             .WithSummary(nameof(GetOwnerByRouteTokenAsync))
             .WithDescription(
@@ -53,6 +62,15 @@ public partial class ControllersExtentions
             Retrieves owner details using their public-facing unique route token.
             """
             ).Produces<Owner>(200).Produces(204).ProducesProblem(400);
+
+        //app.MapGet("/api/owners/{id}/shareableLink", GetOwnerShareableLinkByIdAsync)
+        //    .WithTags(groupName)
+        //    .WithSummary(nameof(GetOwnerShareableLinkByIdAsync))
+        //    .WithDescription(
+        //    """
+        //    for testing current output using id to get token and insert it in a shareable link (local host for now)
+        //    """
+        //    ).Produces<Owner>(200).Produces(204).ProducesProblem(400);
 
         app.MapDelete("/api/owners/{id}", DeleteOwnerAsync)
             .WithTags(groupName)
