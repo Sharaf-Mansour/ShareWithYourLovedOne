@@ -1,4 +1,4 @@
-﻿namespace Library.Services.Foundation;
+﻿namespace Library.Services.Foundations;
 public interface IScheduleEntryService
 {
     ValueTask AddScheduleEntryAsync(ScheduleEntry scheduleEntry);
@@ -6,5 +6,5 @@ public interface IScheduleEntryService
     ValueTask<IEnumerable<ScheduleEntry>> RetrieveAllScheduleEntriesForOwnerAsync(int ownerId);
     ValueTask ModifyScheduleEntryAsync(ScheduleEntry scheduleEntry);
     ValueTask RemoveScheduleEntryByIdAsync(int scheduleEntryId);
-    //ValueTask<IEnumerable<ScheduleEntry>> RetrievePublicScheduleByTokenAsync(Guid routeToken); // to be implemted
+    ValueTask<IEnumerable<ScheduleEntry>> RetrieveAllScheduleEntriesInDateRangeForOwnerAsync(int ownerId, DateTime fromDate, DateTime toDate);
 }
