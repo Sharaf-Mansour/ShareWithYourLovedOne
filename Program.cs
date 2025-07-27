@@ -1,12 +1,13 @@
-﻿global using Library.Brokers.Storages;
-global using Library.Services.Foundation;
-global using Library.Models;
-global using Library.Controllers;
-global using System.Text.Json.Serialization;
+﻿global using System.Text.Json.Serialization;
 global using Dapper;
+global using Library.Brokers.Storages;
+global using Library.Controllers;
+global using Library.Models;
+global using Library.Services.Foundation;
 global using Library.Services.Orchestration;
-using Scalar.AspNetCore;
 using Arora.GlobalExceptionHandler;
+using Library.Services.Foundations;
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 var appVersion = builder.Configuration.GetValue<string>("AppVersion") ?? "1.0.0";
