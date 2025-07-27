@@ -28,27 +28,27 @@ public partial class StorageBroker : IStorageBroker
         await connection.ExecuteAsync(sql, scheduleEntry);
     }
 
-    public async ValueTask DeleteScheduleEntryAsync(int scheduleEntryId)
+    public async ValueTask DeleteScheduleEntryAsync(int ID)
     {
         using var connection = CreateConnection();
         var sql = "DELETE FROM ScheduleEntry WHERE ID = @ID";
 
-        await connection.ExecuteAsync(sql, new { ID = scheduleEntryId });
+        await connection.ExecuteAsync(sql, new { ID });
     }
 
 
-    public async ValueTask<ScheduleEntry?> SelectScheduleEntryByIdAsync(int scheduleEntryId)
+    public async ValueTask<ScheduleEntry?> SelectScheduleEntryByIdAsync(int ID)
     {
         using var connection = CreateConnection();
         var sql = "SELECT * FROM ScheduleEntry WHERE ID = @ID";
-        return await connection.QuerySingleOrDefaultAsync<ScheduleEntry>(sql, new { ID = scheduleEntryId });
+        return await connection.QuerySingleOrDefaultAsync<ScheduleEntry>(sql, new { ID });
     }
 
-    public async ValueTask<IEnumerable<ScheduleEntry>> SelectAllScheduleEntriesByOwnerIdAsync(int ownerId)
+    public async ValueTask<IEnumerable<ScheduleEntry>> SelectAllScheduleEntriesByOwnerIdAsync(int OwnerID)
     {
         using var connection = CreateConnection();
         var sql = "SELECT * FROM ScheduleEntry WHERE OwnerID = @OwnerID";
-        return await connection.QueryAsync<ScheduleEntry>(sql, new { OwnerID = ownerId });
+        return await connection.QueryAsync<ScheduleEntry>(sql, new { OwnerID });
     }
 
 
@@ -60,6 +60,18 @@ public partial class StorageBroker : IStorageBroker
         return await connection.QueryAsync<ScheduleEntry>(sql);
     }
 
+    public async ValueTask<IEnumerable<ScheduleEntry>> SelectScheduleEntriesInDateRangeByOwnerIdAsync(int OwnerID, DateTime FromDate, DateTime ToDate)
+    {
+        using var connection = CreateConnection();
+        var sql = """
+                  SELECT * FROM ScheduleEntry
+                  WHERE OwnerID = @OwnerID
+                  AND StartDateTime >= @FromDate
+                  AND StartDateTime < @ToDate
+                  ORDER BY StartDateTime;
+                  """;
+        return await connection.QueryAsync<ScheduleEntry>(sql, new { OwnerID, FromDate, ToDate });
 
 
+    }
 }
