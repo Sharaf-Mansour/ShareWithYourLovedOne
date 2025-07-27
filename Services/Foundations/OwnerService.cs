@@ -25,20 +25,17 @@ public class OwnerService(IStorageBroker storageBroker) : IOwnerService
     }
     public async ValueTask<Owner> LoginAsync(DTO.LogInOwnerRecord loginDto)
     {
-        // 1. Basic validation
+
         if (string.IsNullOrWhiteSpace(loginDto.Email) || string.IsNullOrWhiteSpace(loginDto.Password))
             throw new Exception("Email and password are required.");
 
         var existingOwner = await storageBroker.SelectOwnerByEmailAsync(loginDto.Email);
 
-        // 3. Authenticate: Check if user exists AND if the password matches.
-        //    For security, we use the same error message for both cases to prevent "user enumeration".
         if (existingOwner is null || existingOwner.Password != loginDto.Password)
         {
-            throw new  Exception("Invalid email or password.");
+            throw new Exception("Invalid email or password.");
         }
 
-        // 4. If authentication succeeds, map the result to a safe DTO and return it.
         return existingOwner;
     }
     public async ValueTask<IEnumerable<Owner>> RetrieveAllOwnersAsync() => await storageBroker.SelectAllOwnersAsync();
