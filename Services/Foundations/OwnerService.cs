@@ -1,97 +1,55 @@
-﻿using Library.Models;
-namespace Library.Services.Foundation;
+﻿namespace Library.Services.Foundations;
 public class OwnerService(IStorageBroker storageBroker) : IOwnerService
 {
     public async ValueTask AddOwnerAsync(Owner owner)
     {
-        if (string.IsNullOrWhiteSpace(owner.Name))
+        var existingOwner = await storageBroker.SelectOwnerByEmailAsync(owner.Email);
 
-            throw new Exception("Owner name cannot be null or empty.");
-
-        if (string.IsNullOrWhiteSpace(owner.Email))
-
-            throw new Exception("Owner email cannot be null or empty.");
-
-        if (string.IsNullOrWhiteSpace(owner.Password))
-
-            throw new Exception("Owner password cannot be null or empty.");
-
-        Owner? existingOwner = await storageBroker.SelectOwnerByEmailAsync(owner.Email);
         if (existingOwner is not null)
 
-            throw new Exception("An owner with this email already exists.");
+            throw new EmailAlreadyInUse();
 
         await storageBroker.InsertOwnerAsync(owner);
     }
-    public async ValueTask<Owner> LoginAsync(DTO.LogInOwnerRecord loginDto)
+    public async ValueTask<int> LoginAsync(Owner owner)
     {
+        var existingOwner = await storageBroker.SelectOwnerByEmailAsync(owner.Email);
 
-        if (string.IsNullOrWhiteSpace(loginDto.Email) || string.IsNullOrWhiteSpace(loginDto.Password))
-            throw new Exception("Email and password are required.");
+        if (existingOwner is null || existingOwner.Password != owner.Password)
 
-        var existingOwner = await storageBroker.SelectOwnerByEmailAsync(loginDto.Email);
+            throw new InvalidCredentialsException();
 
-        if (existingOwner is null || existingOwner.Password != loginDto.Password)
-        {
-            throw new Exception("Invalid email or password.");
-        }
-
-        return existingOwner;
+        return existingOwner.ID;
     }
-    public async ValueTask<IEnumerable<Owner>> RetrieveAllOwnersAsync() => await storageBroker.SelectAllOwnersAsync();
-    public async ValueTask<Owner?> RetrieveOwnerByIdAsync(int Id)
+    public async ValueTask ModifyOwnerAsync(Owner owner)
     {
-        if (Id <= 0)
-
-            throw new Exception("Owner ID is invalid.");
-
-        return await storageBroker.SelectOwnerByIdAsync(Id);
-    }
-    public async ValueTask<Owner> ModifyOwnerAsync(Owner owner)
-    {
-        if (owner.ID <= 0)
-            throw new Exception("Owner ID is invalid.");
-
-        Owner? existingOwner = await storageBroker.SelectOwnerByIdAsync(owner.ID);
-
-        if (existingOwner is null)
-
-            throw new Exception($"Owner with ID {owner.ID} not found. Cannot update.");
-
-        if (!string.IsNullOrWhiteSpace(owner.Name))
-
-            existingOwner.Name = owner.Name;
+        Owner? existingOwner = await storageBroker.SelectOwnerByIdAsync(owner.ID) ?? throw new OwnerNotFoundException();
 
         if (!string.IsNullOrWhiteSpace(owner.Email))
+        {
+            var existingEmail = await storageBroker.SelectOwnerByEmailAsync(owner.Email);
+
+            if (existingEmail is not null && existingEmail.ID != existingOwner.ID)
+
+                throw new EmailAlreadyInUse();
 
             existingOwner.Email = owner.Email;
-
-        if (!string.IsNullOrWhiteSpace(owner.Password))
-
-            existingOwner.Password = owner.Password;
+        }
+        existingOwner.Name = owner.Name ?? existingOwner.Name;
+        existingOwner.Password = owner.Password ?? existingOwner.Password;
 
         await storageBroker.UpdateOwnerAsync(existingOwner);
-
-        return existingOwner;
     }
     public async ValueTask RemoveOwnerByIdAsync(int Id)
     {
-        if (Id <= 0)
-
-            throw new Exception("Owner ID is invalid.");
-
-        Owner? ownerToDelete = await storageBroker.SelectOwnerByIdAsync(Id);
-        if (ownerToDelete is null)
-
-            throw new Exception($"Owner with ID {Id} not found. Nothing to delete.");
-
+        var user = await storageBroker.SelectOwnerByIdAsync(Id) ?? throw new OwnerNotFoundException();
         await storageBroker.DeleteOwnerAsync(Id);
     }
-    public async ValueTask<Owner?> RetrieveOwnerByRouteTokenAsync(string routeToken)
-    {
-        if (string.IsNullOrWhiteSpace(routeToken))
-            throw new Exception("Route Token cannot be null");
-        return await storageBroker.SelectOwnerByRouteTokenAsync(routeToken);
-    }
+    public async ValueTask<IEnumerable<Owner>> RetrieveAllOwnersAsync() => await storageBroker.SelectAllOwnersAsync();
+    public async ValueTask<Owner?> RetrieveOwnerByIdAsync(int Id) => await storageBroker.SelectOwnerByIdAsync(Id);
+    public async ValueTask<Owner?> RetrieveOwnerByRouteTokenAsync(string routeToken) => await storageBroker.SelectOwnerByRouteTokenAsync(routeToken);
     public async ValueTask<Owner?> RetrieveOwnerByEmailAsync(string email) => await storageBroker.SelectOwnerByEmailAsync(email);
 }
+public class EmailAlreadyInUse : Exception;
+public class InvalidCredentialsException : Exception;
+public class OwnerNotFoundException : Exception;
