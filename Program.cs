@@ -3,10 +3,9 @@ global using Dapper;
 global using Library.Brokers.Storages;
 global using Library.Controllers;
 global using Library.Models;
-global using Library.Services.Foundation;
+global using Library.Services.Foundations;
 global using Library.Services.Orchestration;
 using Arora.GlobalExceptionHandler;
-using Library.Services.Foundations;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
