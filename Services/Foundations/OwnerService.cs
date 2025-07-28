@@ -40,11 +40,7 @@ public class OwnerService(IStorageBroker storageBroker) : IOwnerService
 
         await storageBroker.UpdateOwnerAsync(existingOwner);
     }
-    public async ValueTask RemoveOwnerByIdAsync(int Id)
-    {
-        var user = await storageBroker.SelectOwnerByIdAsync(Id) ?? throw new OwnerNotFoundException();
-        await storageBroker.DeleteOwnerAsync(Id);
-    }
+    public async ValueTask RemoveOwnerByIdAsync(int Id) => await storageBroker.DeleteOwnerAsync(Id);
     public async ValueTask<IEnumerable<Owner>> RetrieveAllOwnersAsync() => await storageBroker.SelectAllOwnersAsync();
     public async ValueTask<Owner?> RetrieveOwnerByIdAsync(int Id) => await storageBroker.SelectOwnerByIdAsync(Id);
     public async ValueTask<Owner?> RetrieveOwnerByRouteTokenAsync(string routeToken) => await storageBroker.SelectOwnerByRouteTokenAsync(routeToken);

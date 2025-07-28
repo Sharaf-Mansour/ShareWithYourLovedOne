@@ -6,7 +6,7 @@ public static partial class ControllersExtentions
     static async ValueTask<IResult> GetOwnerByIdAsync(int id, IOwnerService ownerService)
     {
         var Owner = await ownerService.RetrieveOwnerByIdAsync(id);
-        return Owner is not null ? Results.Ok(Owner) : Results.NotFound("Owner not Found");
+        return Owner is not null ? Results.Ok(Owner) : Results.NoContent();
     }
     static async ValueTask<IResult> PostOwnerAsync(IOwnerService ownerService, DTO.AddOwnerRecord ownerDto)
     {
@@ -69,19 +69,12 @@ public static partial class ControllersExtentions
     static async ValueTask<IResult> GetOwnerByRouteTokenAsync(string routeToken, IOwnerService ownerService)
     {
         var Owner = await ownerService.RetrieveOwnerByRouteTokenAsync(routeToken);
-        return Owner is not null ? Results.Ok(Owner) : Results.NotFound("Owner not Found");
+        return Owner is not null ? Results.Ok(Owner) : Results.NoContent();
     }
     static async ValueTask<IResult> DeleteOwnerAsync(int id, IOwnerService ownerService)
     {
-        try
-        {
-            await ownerService.RemoveOwnerByIdAsync(id);
-            return Results.Ok();
-        }
-        catch (OwnerNotFoundException)
-        {
-            return Results.NotFound("Owner not Found");
-        }
+        await ownerService.RemoveOwnerByIdAsync(id);
+        return Results.Ok();
     }
     static async ValueTask<IResult> GetOwnerShareableLinkByIdAsync(int id, IOwnerService OwnerService, HttpContext httpContext)
     {
