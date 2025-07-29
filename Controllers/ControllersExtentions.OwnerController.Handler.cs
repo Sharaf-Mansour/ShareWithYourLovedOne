@@ -55,9 +55,9 @@ public static partial class ControllersExtentions
                 Password = ownerUpdate.Password
             };
             await ownerService.ModifyOwnerAsync(owner);
-            return Results.NoContent();
+            return Results.Ok();
         }
-        catch (OwnerNotFoundException )
+        catch (OwnerNotFoundException)
         {
             return Results.NotFound("Owner not found");
         }
