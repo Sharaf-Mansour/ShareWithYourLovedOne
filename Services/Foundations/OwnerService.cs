@@ -23,15 +23,11 @@ public class OwnerService(IStorageBroker storageBroker) : IOwnerService
     }
     public async ValueTask ModifyOwnerAsync(Owner owner)
     {
-        Owner? existingOwner = await storageBroker.SelectOwnerByIdAsync(owner.ID) ?? throw new OwnerNotFoundException();
-        existingOwner.Name = owner.Name ?? existingOwner.Name;
-        existingOwner.Password = owner.Password ?? existingOwner.Password;
-        if (owner.Email is not null)
-        {
-            var isEmailFound = await storageBroker.SelectOwnerByEmailAsync(owner.Email);
-            existingOwner.Email = isEmailFound is null ? owner.Email : throw new EmailAlreadyInUse();
-        }
-        await storageBroker.UpdateOwnerAsync(existingOwner);
+        var existingOwner = await storageBroker.SelectOwnerByIdAsync(owner.ID) ?? throw new OwnerNotFoundException();
+        var isEmailFound = await storageBroker.SelectOwnerByEmailAsync(owner.Email);
+        if (isEmailFound is not null && isEmailFound.ID != existingOwner.ID)
+                throw new EmailAlreadyInUse();
+        await storageBroker.UpdateOwnerAsync(owner);
     }
     public async ValueTask RemoveOwnerByIdAsync(int Id) => await storageBroker.DeleteOwnerAsync(Id);
     public async ValueTask<IEnumerable<Owner>> RetrieveAllOwnersAsync() => await storageBroker.SelectAllOwnersAsync();
