@@ -5,6 +5,7 @@ global using Library.Controllers;
 global using Library.Models;
 global using Library.Services.Foundations;
 global using Library.Services.Orchestration;
+using Arora.Blazor.StateContainer;
 using Arora.GlobalExceptionHandler;
 using Scalar.AspNetCore;
 
@@ -15,6 +16,7 @@ builder.Services.AddTransient<IOwnerService, OwnerService>();
 builder.Services.AddTransient<IScheduleEntryService, ScheduleEntryService>();
 builder.Services.AddTransient<IStorageBroker, StorageBroker>();
 builder.Services.AddTransient<IScheduleOrchestrationService, ScheduleOrchestrationService>();
+builder.Services.AddStateContainer();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
