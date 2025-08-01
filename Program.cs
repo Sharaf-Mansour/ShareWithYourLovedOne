@@ -4,7 +4,7 @@ global using Library.Brokers.Storages;
 global using Library.Controllers;
 global using Library.Models;
 global using Library.Services.Foundation;
-global using Library.Services.Orchestration;
+//global using Library.Services.Orchestration;
 using Arora.GlobalExceptionHandler;
 using Library.Services.Foundations;
 using Scalar.AspNetCore;
@@ -15,10 +15,21 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddTransient<IOwnerService, OwnerService>();
 builder.Services.AddTransient<IScheduleEntryService, ScheduleEntryService>();
 builder.Services.AddTransient<IStorageBroker, StorageBroker>();
-builder.Services.AddTransient<IScheduleOrchestrationService, ScheduleOrchestrationService>();
 builder.Services.AddOpenApi();
 
+//cors
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
 var app = builder.Build();
+app.UseCors(); //cors
 app.MapOpenApi();
 
 app.MapScalarApiReference(options =>
