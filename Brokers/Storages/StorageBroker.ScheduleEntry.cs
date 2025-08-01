@@ -48,6 +48,19 @@ public partial class StorageBroker : IStorageBroker
     {
         using var connection = CreateConnection();
         var sql = "SELECT * FROM ScheduleEntry WHERE OwnerID = @OwnerID";
+        //var sql =
+        //    """
+        //    SELECT 
+        //        ID, 
+        //        Title, 
+        //        strftime('%Y-%m-%dT%H:%M:%fZ', StartDateTime) AS StartDateTime,
+        //        strftime('%Y-%m-%dT%H:%M:%fZ', EndDateTime) AS EndDateTime,
+        //        IsBusy, 
+        //        OwnerID
+
+        //    FROM ScheduleEntry 
+        //    WHERE OwnerID = @OwnerID;
+        //    """;
         return await connection.QueryAsync<ScheduleEntry>(sql, new { OwnerID });
     }
 
@@ -60,18 +73,19 @@ public partial class StorageBroker : IStorageBroker
         return await connection.QueryAsync<ScheduleEntry>(sql);
     }
 
-    public async ValueTask<IEnumerable<ScheduleEntry>> SelectScheduleEntriesInDateRangeByOwnerIdAsync(int OwnerID, DateTime FromDate, DateTime ToDate)
+    public async ValueTask<IEnumerable<ScheduleEntry>> SelectAllEntriesByRouteTokenAsync(string RouteToken)
     {
         using var connection = CreateConnection();
-        var sql = """
-                  SELECT * FROM ScheduleEntry
-                  WHERE OwnerID = @OwnerID
-                  AND StartDateTime >= @FromDate
-                  AND StartDateTime < @ToDate
-                  ORDER BY StartDateTime;
-                  """;
-        return await connection.QueryAsync<ScheduleEntry>(sql, new { OwnerID, FromDate, ToDate });
-
-
+        var sql =
+            """
+            SELECT ScheduleEntry.*
+            FROM ScheduleEntry ScheduleEntry
+            JOIN Owner ON ScheduleEntry.OwnerID = Owner.ID
+            WHERE Owner.RouteToken = @RouteToken
+            AND ScheduleEntry.StartDateTime BETWEEN datetime('now') AND datetime('now', '+24 hours')
+            ORDER BY ScheduleEntry.StartDateTime ASC;
+            """;
+        return await connection.QueryAsync<ScheduleEntry>(sql, new { RouteToken });
     }
+
 }
