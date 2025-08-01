@@ -19,7 +19,18 @@ builder.Services.AddTransient<IStorageBroker, StorageBroker>();
 builder.Services.AddStateContainer();
 builder.Services.AddOpenApi();
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
 var app = builder.Build();
+app.UseCors(); //cors
 
 if (app.Environment.IsDevelopment())
     Process.Start(new ProcessStartInfo
