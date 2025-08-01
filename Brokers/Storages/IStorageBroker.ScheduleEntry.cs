@@ -7,5 +7,5 @@ public partial interface IStorageBroker
     ValueTask<ScheduleEntry?> SelectScheduleEntryByIdAsync(int scheduleEntryId);
     ValueTask<IEnumerable<ScheduleEntry>> SelectAllScheduleEntriesByOwnerIdAsync(int ownerId);
     ValueTask<IEnumerable<ScheduleEntry>> SelectAllScheduleEntriesAsync();
-    ValueTask<IEnumerable<ScheduleEntry>> SelectScheduleEntriesInDateRangeByOwnerIdAsync(int ownerId, DateTime fromDate, DateTime toDate);
+    ValueTask<IEnumerable<ScheduleEntry>> SelectAllEntriesByRouteTokenAsync(string routeToken);
 }
