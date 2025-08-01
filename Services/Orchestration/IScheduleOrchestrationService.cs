@@ -1,7 +1,0 @@
-﻿namespace Library.Services.Orchestration
-{
-    public interface IScheduleOrchestrationService
-    {
-        ValueTask<IEnumerable<ScheduleEntry>> RetrievePublicScheduleByTokenAsync(string routeToken);
-    }
-}
