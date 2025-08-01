@@ -3,7 +3,6 @@ global using Library.Brokers.Storages;
 global using Library.Controllers;
 global using Library.Models;
 global using Library.Services.Foundations;
-global using Library.Services.Orchestration;
 global using System.Text.Json.Serialization;
 using Arora.Blazor.StateContainer;
 using Arora.GlobalExceptionHandler;
@@ -17,7 +16,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddTransient<IOwnerService, OwnerService>();
 builder.Services.AddTransient<IScheduleEntryService, ScheduleEntryService>();
 builder.Services.AddTransient<IStorageBroker, StorageBroker>();
-builder.Services.AddTransient<IScheduleOrchestrationService, ScheduleOrchestrationService>();
 builder.Services.AddStateContainer();
 builder.Services.AddOpenApi();
 
