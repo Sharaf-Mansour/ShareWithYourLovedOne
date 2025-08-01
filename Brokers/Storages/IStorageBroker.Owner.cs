@@ -1,12 +1,11 @@
 ﻿namespace Library.Brokers.Storages;
-
 public partial interface IStorageBroker
 {
-    ValueTask InsertOwnerAsync(Owner owner);
+    ValueTask InsertOwnerAsync(Owner Owner);
     ValueTask <IEnumerable<Owner>> SelectAllOwnersAsync();
-    ValueTask <Owner?> SelectOwnerByIdAsync(int owner_id);
-    ValueTask UpdateOwnerAsync(Owner owner);
-    ValueTask<Owner?> SelectOwnerByRouteTokenAsync(string routeToken);
-    ValueTask DeleteOwnerAsync(int owner_id);
-    ValueTask<Owner?> SelectOwnerByEmailAsync(string email);
+    ValueTask <Owner?> SelectOwnerByIdAsync(int ID);
+    ValueTask UpdateOwnerAsync(Owner Owner);
+    ValueTask<Owner?> SelectOwnerByRouteTokenAsync(string RouteToken);
+    ValueTask DeleteOwnerAsync(int ID);
+    ValueTask<Owner?> SelectOwnerByEmailAsync(string? Email);
 }

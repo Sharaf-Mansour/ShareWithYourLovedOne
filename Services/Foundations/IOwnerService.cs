@@ -1,13 +1,11 @@
-﻿using Library.Models;
-
-namespace Library.Services.Foundation;
+﻿namespace Library.Services.Foundations;
 public interface IOwnerService
 {
     ValueTask AddOwnerAsync(Owner onwer);
-    ValueTask<Owner> LoginAsync(DTO.LogInOwnerRecord loginDto);
+    ValueTask<int> LoginAsync(Owner owner);
     ValueTask<IEnumerable<Owner>> RetrieveAllOwnersAsync();
     ValueTask<Owner?> RetrieveOwnerByIdAsync(int Id);
-    ValueTask<Owner> ModifyOwnerAsync(Owner onwer);
+    ValueTask ModifyOwnerAsync(Owner onwer);
     ValueTask RemoveOwnerByIdAsync(int Id);
     ValueTask<Owner?> RetrieveOwnerByRouteTokenAsync(string routeToken);
     ValueTask<Owner?> RetrieveOwnerByEmailAsync(string email);

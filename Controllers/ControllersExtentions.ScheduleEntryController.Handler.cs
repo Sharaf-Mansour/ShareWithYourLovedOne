@@ -77,7 +77,7 @@ public static partial class ControllersExtentions
         }
         catch (Exception ex)
         {
-            return Results.NotFound(new { message = ex.Message });
+            return Results.NotFound(new {  ex.Message });
         }
     }
 }

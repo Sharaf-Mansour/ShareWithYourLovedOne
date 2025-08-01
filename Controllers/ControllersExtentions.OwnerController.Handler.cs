@@ -1,35 +1,15 @@
-﻿using Library.Models;
-using Library.Services.Foundation;
-
-namespace Library.Controllers;
+﻿namespace Library.Controllers;
 public static partial class ControllersExtentions
 {
-    static async ValueTask<IResult> GetAllOwnersAsync(IOwnerService OwnerService) =>
-        Results.Ok(await OwnerService.RetrieveAllOwnersAsync());
-
-    static async ValueTask<IResult> GetOwnerByIdAsync(int id, IOwnerService OwnerService)
+    static async ValueTask<IResult> GetAllOwnersAsync(IOwnerService ownerService) =>
+        Results.Ok(await ownerService.RetrieveAllOwnersAsync());
+    static async ValueTask<IResult> GetOwnerByIdAsync(int id, IOwnerService ownerService)
     {
-        //if (id <= 0) return Results.BadRequest("Invalid Id");
-        try
-        { 
-            var Owner = await OwnerService.RetrieveOwnerByIdAsync(id);
-            return Owner is not null ? Results.Ok(Owner) : Results.NoContent();
-        }
-        catch (Exception ex)
-        {
-            return Results.BadRequest(ex.Message);
-        }
+        var Owner = await ownerService.RetrieveOwnerByIdAsync(id);
+        return Owner is not null ? Results.Ok(Owner) : Results.NoContent();
     }
-
-    static async ValueTask<IResult> PostOwnerAsync(IOwnerService OwnerService, DTO.AddOwnerRecord ownerDto)
+    static async ValueTask<IResult> PostOwnerAsync(IOwnerService ownerService, DTO.AddOwnerRecord ownerDto)
     {
-        //if ((string.IsNullOrWhiteSpace(ownerDto.Name)) || (string.IsNullOrWhiteSpace(ownerDto.Password)) || (string.IsNullOrWhiteSpace(ownerDto.Email)))
-        //    return Results.BadRequest("Owner name, email, password cannot be null or empty.");
-
-        //var existingOwner = await OwnerService.RetrieveOwnerByEmailAsync(ownerDto.Email);
-
-        //if (existingOwner is not null)
-        //    return Results.BadRequest("An owner with this email already exists.");
         try
         {
             var owner = new Owner
@@ -38,38 +18,33 @@ public static partial class ControllersExtentions
                 Email = ownerDto.Email,
                 Password = ownerDto.Password
             };
-
-            await OwnerService.AddOwnerAsync(owner);
-            Owner createdOwner = await OwnerService.RetrieveOwnerByEmailAsync(ownerDto.Email);
-            return Results.Created($"/api/owners/{createdOwner.ID}", createdOwner);
+            await ownerService.AddOwnerAsync(owner);
+            return Results.Created();
         }
-
-        catch (Exception ex)
+        catch (EmailAlreadyInUse)
         {
-            return Results.BadRequest(ex.Message);
+            return Results.Conflict("Email already in use");
         }
     }
-    static async ValueTask<IResult> LoginAsync( DTO.LogInOwnerRecord loginOwner,  IOwnerService ownerService)
+    static async ValueTask<IResult> LoginAsync(DTO.LogInOwnerRecord loginOwner, IOwnerService ownerService)
     {
         try
         {
-            var ownerDetails = await ownerService.LoginAsync(loginOwner);
+            var owner = new Owner
+            {
+                Email = loginOwner.Email,
+                Password = loginOwner.Password
+            };
+            var ownerDetails = await ownerService.LoginAsync(owner);
             return Results.Ok(ownerDetails);
         }
-        catch (Exception ex)
+        catch (InvalidCredentialsException)
         {
-            return Results.BadRequest(ex.Message);
+            return Results.Unauthorized();
         }
     }
-    static async ValueTask<IResult> PutOwnerAsync(int id, IOwnerService OwnerService, DTO.AddOwnerRecord ownerUpdate)
+    static async ValueTask<IResult> PutOwnerAsync(int id, IOwnerService ownerService, DTO.AddOwnerRecord ownerUpdate)
     {
-        //if (id <= 0) 
-        //    return Results.BadRequest("Invalid Owner");
-        //var ownerToUpdate = await OwnerService.RetrieveOwnerByIdAsync(id);
-        //if (ownerToUpdate is null)
-        //{
-        //    return Results.BadRequest($"Owner with ID {id} not found.");
-        //}
         try
         {
             var owner = new Owner
@@ -79,33 +54,34 @@ public static partial class ControllersExtentions
                 Email = ownerUpdate.Email,
                 Password = ownerUpdate.Password
             };
-            var updatedOwner = await OwnerService.ModifyOwnerAsync(owner);
-            //var updatedOwner = await OwnerService.RetrieveOwnerByIdAsync(id);
-            return updatedOwner is not null ? Results.Ok(updatedOwner) : Results.NoContent();
+            await ownerService.ModifyOwnerAsync(owner);
+            return Results.Ok();
         }
-        catch (Exception ex)
+        catch (OwnerNotFoundException)
         {
-            return Results.BadRequest(ex.Message);
+            return Results.NotFound("Owner not found");
+        }
+        catch (EmailAlreadyInUse)
+        {
+            return Results.Conflict("Email already in use");
         }
     }
-    static async ValueTask<IResult> GetOwnerByRouteTokenAsync(string routeToken, IOwnerService OwnerService)
+    static async ValueTask<IResult> GetOwnerByRouteTokenAsync(string routeToken, IOwnerService ownerService)
     {
-        try
-        { 
-        var Owner = await OwnerService.RetrieveOwnerByRouteTokenAsync(routeToken);
+        var Owner = await ownerService.RetrieveOwnerByRouteTokenAsync(routeToken);
         return Owner is not null ? Results.Ok(Owner) : Results.NoContent();
-        }
-        catch (Exception ex)
-        {
-            return Results.BadRequest(ex.Message);
-        }
+    }
+    static async ValueTask<IResult> DeleteOwnerAsync(int id, IOwnerService ownerService)
+    {
+        await ownerService.RemoveOwnerByIdAsync(id);
+        return Results.Ok();
     }
     static async ValueTask<IResult> GetOwnerShareableLinkByIdAsync(int id, IOwnerService OwnerService, HttpContext httpContext)
     {
         try
         {
             var Owner = await OwnerService.RetrieveOwnerByIdAsync(id);
-            if (Owner is null) 
+            if (Owner is null)
                 return Results.NotFound("owner not found");
             var request = httpContext.Request;
             var baseUrl = $"{request.Scheme}://{request.Host}";
@@ -118,20 +94,5 @@ public static partial class ControllersExtentions
             return Results.BadRequest(ex.Message);
         }
     }
-    static async ValueTask<IResult> DeleteOwnerAsync(int id, IOwnerService OwnerService)
-    {
-        //if (id <= 0) return Results.BadRequest("Invalid Id");
 
-        //var Owner = await OwnerService.RetrieveOwnerByIdAsync(id);
-        //if (Owner is null) return Results.NoContent();
-        try
-        {
-            await OwnerService.RemoveOwnerByIdAsync(id);
-            return Results.Ok();
-        }
-        catch (Exception ex)
-        {
-            return Results.BadRequest(ex.Message);
-        }
-    }
 }
