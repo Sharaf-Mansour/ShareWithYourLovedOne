@@ -6,5 +6,5 @@ public interface IScheduleEntryService
     ValueTask<IEnumerable<ScheduleEntry>> RetrieveAllScheduleEntriesForOwnerAsync(int ownerId);
     ValueTask ModifyScheduleEntryAsync(ScheduleEntry scheduleEntry);
     ValueTask RemoveScheduleEntryByIdAsync(int scheduleEntryId);
-    ValueTask<IEnumerable<ScheduleEntry>> RetrieveAllScheduleEntriesInDateRangeForOwnerAsync(int ownerId, DateTime fromDate, DateTime toDate);
+    ValueTask<IEnumerable<ScheduleEntry>> RetrievePublicScheduleByTokenAsync(string routeToken);
 }
