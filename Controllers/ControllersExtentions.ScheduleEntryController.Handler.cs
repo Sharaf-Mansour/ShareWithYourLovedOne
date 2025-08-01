@@ -1,6 +1,4 @@
-﻿using Library.Services.Foundation;
-using Library.Services.Foundations;
-using Library.Services.Orchestration;
+﻿using Library.Services.Foundations;
 
 namespace Library.Controllers;
 public static partial class ControllersExtentions
@@ -8,22 +6,16 @@ public static partial class ControllersExtentions
     private static async ValueTask<IResult> PostScheduleEntryAsync(IScheduleEntryService scheduleEntryService, CreateScheduleEntryDto scheduleEntryDto)
     {
         var scheduleEntryToCreate = new ScheduleEntry
-        { 
+        {
             Title = scheduleEntryDto.Title,
             StartDateTime = scheduleEntryDto.StartDateTime,
             EndDateTime = scheduleEntryDto.EndDateTime,
             IsBusy = scheduleEntryDto.IsBusy,
             OwnerID = scheduleEntryDto.OwnerId
         };
-        
+
         await scheduleEntryService.AddScheduleEntryAsync(scheduleEntryToCreate);
         return Results.Created();
-        /*return Results.CreatedAtRoute(
-            "GetScheduleEntryId",
-            new { id = scheduleEntry.ID },
-            scheduleEntry
-            );
-        return Results.Ok(scheduleEntry);*/
     }
 
     private static async ValueTask<IResult> GetScheduleEntryByIdAsync(IScheduleEntryService scheduleEntryService, int id)
@@ -52,7 +44,7 @@ public static partial class ControllersExtentions
         }
 
         var scheduleEntryToUpdate = new ScheduleEntry
-        { 
+        {
             ID = id,
             Title = scheduleEntryDto.Title,
             StartDateTime = scheduleEntryDto.StartDateTime,
@@ -63,12 +55,6 @@ public static partial class ControllersExtentions
 
         await scheduleEntryService.ModifyScheduleEntryAsync(scheduleEntryToUpdate);
         return Results.Ok();
-
-        /*if (id <= 0)
-            return Results.BadRequest("Invalid ID. Must be a positive number.");
-        scheduleEntry.ID = id;
-        await scheduleEntryService.ModifyScheduleEntryAsync(scheduleEntry);
-        return Results.Ok(scheduleEntry);*/
     }
 
     private static async ValueTask<IResult> DeleteScheduleEntryAsync(IScheduleEntryService scheduleEntryService, int id)
@@ -81,17 +67,17 @@ public static partial class ControllersExtentions
     }
 
     private static async ValueTask<IResult> GetPublicScheduleByTokenAsync(
-        IScheduleOrchestrationService orchestrationService, // 💉 It asks for the General Contractor!
+        IScheduleEntryService scheduleEntryService, // 💉 It asks for the General Contractor!
         string routeToken)
     {
         try
         {
-            var schedule = await orchestrationService.RetrievePublicScheduleByTokenAsync(routeToken);
+            var schedule = await scheduleEntryService.RetrievePublicScheduleByTokenAsync(routeToken);
             return Results.Ok(schedule);
         }
         catch (Exception ex)
         {
-            return Results.NotFound(new { Message = ex.Message });
+            return Results.NotFound(new { message = ex.Message });
         }
     }
 }
