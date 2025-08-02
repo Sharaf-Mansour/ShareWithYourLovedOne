@@ -63,16 +63,12 @@ public partial class StorageBroker : IStorageBroker
         //    """;
         return await connection.QueryAsync<ScheduleEntry>(sql, new { OwnerID });
     }
-
-
-
     public async ValueTask<IEnumerable<ScheduleEntry>> SelectAllScheduleEntriesAsync()
     {
         using var connection = CreateConnection();
         var sql = "SELECT * FROM ScheduleEntry";
         return await connection.QueryAsync<ScheduleEntry>(sql);
     }
-
     public async ValueTask<IEnumerable<ScheduleEntry>> SelectAllEntriesByRouteTokenAsync(string RouteToken)
     {
         using var connection = CreateConnection();
@@ -87,5 +83,4 @@ public partial class StorageBroker : IStorageBroker
             """;
         return await connection.QueryAsync<ScheduleEntry>(sql, new { RouteToken });
     }
-
 }
