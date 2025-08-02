@@ -8,7 +8,7 @@ public static partial class ControllersExtentions
         var Owner = await ownerService.RetrieveOwnerByIdAsync(id);
         return Owner is not null ? Results.Ok(Owner) : Results.NoContent();
     }
-    static async ValueTask<IResult> PostOwnerAsync(IOwnerService ownerService, DTO.AddOwnerRecord ownerDto)
+    static async ValueTask<IResult> PostOwnerAsync(IOwnerService ownerService, AddOwnerRecord ownerDto)
     {
         try
         {
@@ -26,7 +26,7 @@ public static partial class ControllersExtentions
             return Results.Conflict("Email already in use");
         }
     }
-    static async ValueTask<IResult> LoginAsync(DTO.LogInOwnerRecord loginOwner, IOwnerService ownerService)
+    static async ValueTask<IResult> LoginAsync(LogInOwnerRecord loginOwner, IOwnerService ownerService)
     {
         try
         {
@@ -43,7 +43,7 @@ public static partial class ControllersExtentions
             return Results.Unauthorized();
         }
     }
-    static async ValueTask<IResult> PutOwnerAsync(int id, IOwnerService ownerService, DTO.AddOwnerRecord ownerUpdate)
+    static async ValueTask<IResult> PutOwnerAsync(int id, IOwnerService ownerService,AddOwnerRecord ownerUpdate)
     {
         try
         {
