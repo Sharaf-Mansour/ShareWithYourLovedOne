@@ -16,6 +16,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddTransient<IOwnerService, OwnerService>();
 builder.Services.AddTransient<IScheduleEntryService, ScheduleEntryService>();
 builder.Services.AddTransient<IStorageBroker, StorageBroker>();
+builder.Services.AddRazorComponents()
+    .AddInteractiveServerComponents();
 builder.Services.AddStateContainer();
 builder.Services.AddOpenApi();
 
@@ -87,13 +89,23 @@ app.MapOwnerController().MapScheduleEntryEndpoints().MapPublicScheduleEndpoints(
 
 app.UseHttpsRedirection();
 app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode(); 
+    .AddInteractiveServerRenderMode(); //for backend comment this
 app.MapGet("/v", () => appVersion);
 app.MapGet("/datetime", () => DateTime.UtcNow.ToString("yyyy-MM-dd"));
-//app.MapGet("/", () => Results.Redirect("/scalar/v1"));
+//app.MapGet("/", () => Results.Redirect("/scalar/v1")); //for backend uncommet this 
 app.UseGlobalExceptionHandler();
 app.UseAntiforgery();
 app.MapStaticAssets();
 //app.UseAuthorization();
 
 app.Run();
+
+public static partial class Program 
+{
+    public static ScheduleEntry WithUtcDates(this ScheduleEntry entry) =>
+    entry with
+    {
+        StartDateTime = DateTime.SpecifyKind(entry.StartDateTime, DateTimeKind.Utc),
+        EndDateTime = DateTime.SpecifyKind(entry.EndDateTime, DateTimeKind.Utc)
+    };
+}
