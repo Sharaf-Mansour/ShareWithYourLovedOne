@@ -35,6 +35,3 @@ public class OwnerService(IStorageBroker storageBroker) : IOwnerService
     public async ValueTask<Owner?> RetrieveOwnerByRouteTokenAsync(string routeToken) => await storageBroker.SelectOwnerByRouteTokenAsync(routeToken);
     public async ValueTask<Owner?> RetrieveOwnerByEmailAsync(string email) => await storageBroker.SelectOwnerByEmailAsync(email);
 }
-public class EmailAlreadyInUse : Exception;
-public class InvalidCredentialsException : Exception;
-public class OwnerNotFoundException : Exception;
