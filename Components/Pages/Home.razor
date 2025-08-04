@@ -4,115 +4,11 @@
 <div class="min-h-screen bg-gray-900 font-sans flex items-center justify-center p-4">
     @if (isLoggedIn)
     {
-        <div class="bg-gray-800 rounded-2xl shadow-xl w-full max-w-7xl h-[90vh] flex overflow-hidden">
 
-            <div class="w-1/3 bg-gray-900/50 p-6 border-r border-gray-700 flex flex-col justify-between">
-                <div>
-                    <h2 class="text-3xl font-bold text-white mb-6">@loggedInOwner.Name</h2>
-                    @* add/edit entery, sign out, modify acc, delet acc *@
-                </div>
-            </div>
-
-            <div class="w-2/3 flex flex-col">
-                <div class="p-6">
-                    <h2 class="text-3xl font-bold text-white">Your Schedule</h2>
-                </div>
-                <div class="flex-grow p-6 pt-0 overflow-y-auto">
-                    @if (scheduleEntries.Count > 0)
-                    {
-                        <div class="space-y-3">
-                            @foreach (var entry in scheduleEntries)
-                            {
-                                <div class="bg-gray-700/50 p-4 rounded-lg flex items-center justify-between">
-                                    <div>
-                                        <p class="font-semibold text-white text-lg">@entry.Title</p>
-                                        <p class="text-sm text-cyan-400 font-mono mt-1">
-                                            @entry.StartDateTime.ToString("M/d/yyyy"): @entry.StartDateTime.ToString("h:mm tt") – @entry.EndDateTime.ToString("h:mm tt")
-                                        </p>
-                                    </div>
-                                    <div class="flex items-center gap-4">
-                                        <button  class="text-gray-400 hover:text-white font-semibold transition">Edit</button>
-                                        <button  class="text-red-500 hover:text-red-400 font-semibold transition">Delete</button>
-                                    </div>
-                                </div>
-                            }
-                        </div>
-                    }
-                    else
-                    {
-                        <p class="text-gray-500 text-center py-10">You have no schedule entries. Add one to get started.</p>
-                    }
-                </div>
-            </div>
-        </div>
-
+        <DashboardComponent LoggedInOwner="loggedInOwner" />
     }
     else
     {
-        <div class="bg-gray-800 p-8 rounded-2xl shadow-xl w-full max-w-md">
-
-            <div class="text-center mb-8">
-                <h1 class="text-3xl font-bold text-white">@(toggel ? "Welcome Back" : "Create an Account")</h1>
-                <p class="text-gray-400 mt-2">@(toggel ? "Log in to manage your schedule." : "Get started by creating a account.")</p>
-            </div>
-
-            <div class="flex gap-4 mb-6">
-                <button @onclick="() => SwitchMode(true)" class="flex-1 p-2 rounded-lg font-semibold transition @(toggel ? "bg-cyan-600 text-white" : "bg-gray-700 hover:bg-gray-600 text-gray-300")">
-                    Login
-                </button>
-                <button @onclick="() => SwitchMode(false)" class="flex-1 p-2 rounded-lg font-semibold transition @(!toggel ? "bg-cyan-600 text-white" : "bg-gray-700 hover:bg-gray-600 text-gray-300")">
-                    Sign Up
-                </button>
-            </div>
-
-            @if (toggel)
-            {
-                <EditForm Model="owner" OnValidSubmit="HandleLoginAsync">
-                    <div class="space-y-6">
-                        <div>
-                            <label for="login-email" class="block text-sm font-medium text-gray-300">Email Address</label>
-                            <InputText id="login-email" type="email" class="mt-1 w-full bg-gray-700 border-2 border-gray-600 text-white rounded-lg p-3 focus:border-cyan-500 focus:ring-cyan-500 transition" @bind-Value="owner.Email" />
-                        </div>
-                        <div>
-                            <label for="login-password" class="block text-sm font-medium text-gray-300">Password</label>
-                            <InputText id="login-password" type="password" class="mt-1 w-full bg-gray-700 border-2 border-gray-600 text-white rounded-lg p-3 focus:border-cyan-500 focus:ring-cyan-500 transition" @bind-Value="owner.Password" />
-
-                        </div>
-                    </div>
-
-                    <div class="mt-8">
-                        <button type="submit" class="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-lg py-3 rounded-lg transition">Log In</button>
-                    </div>
-                </EditForm>
-            }
-            else
-            {
-                <EditForm Model="owner" OnValidSubmit="HandleSignUpAsync">
-                <div class="space-y-5">
-                    <div>
-                        <label for="signup-name" class="block text-sm font-medium text-gray-300">Full Name</label>
-                            <InputText id="signup-name" class="mt-1 w-full bg-gray-700 border-2 border-gray-600 text-white rounded-lg p-3 focus:border-cyan-500 focus:ring-cyan-500 transition" @bind-Value="owner.Name" />
-                    </div>
-                    <div>
-                        <label for="signup-email" class="block text-sm font-medium text-gray-300">Email Address</label>
-                            <InputText id="signup-email" type="email" class="mt-1 w-full bg-gray-700 border-2 border-gray-600 text-white rounded-lg p-3 focus:border-cyan-500 focus:ring-cyan-500 transition" @bind-Value="owner.Email" />
-                    </div>
-                    <div>
-                        <label for="signup-password" class="block text-sm font-medium text-gray-300">Password</label>
-                            <InputText id="signup-password" type="password" class="mt-1 w-full bg-gray-700 border-2 border-gray-600 text-white rounded-lg p-3 focus:border-cyan-500 focus:ring-cyan-500 transition" @bind-Value="owner.Password" />
-                    </div>
-                </div>
-                <div class="mt-8">
-                    <button type="submit" class="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-lg py-3 rounded-lg transition">Create Account</button>
-                </div>
-            </EditForm>
-            }
-            @if (!string.IsNullOrWhiteSpace(errorMessage))
-            {
-                <div class="bg-red-500/10 border border-red-500/30 text-red-300 p-3 rounded-lg mt-6 text-center" role="alert">
-                    @errorMessage
-                </div>
-            }
-        </div>
+        <AuthComponent OnAuthSuccess="HandleLoginSuccess" />
     }
 </div>

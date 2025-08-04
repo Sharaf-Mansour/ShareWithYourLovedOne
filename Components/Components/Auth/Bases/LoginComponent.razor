@@ -1,0 +1,51 @@
+﻿<EditForm Model="owner" OnValidSubmit="HandleLoginAsync">
+    <div class="space-y-6">
+        <div>
+            <label for="login-email" class="block text-sm font-medium text-gray-300">Email Address</label>
+            <InputText id="login-email" type="email" class="mt-1 w-full bg-gray-700 border-2 border-gray-600 text-white rounded-lg p-3 focus:border-cyan-500 focus:ring-cyan-500 transition" @bind-Value="owner.Email" />
+        </div>
+        <div>
+            <label for="login-password" class="block text-sm font-medium text-gray-300">Password</label>
+            <InputText id="login-password" type="password" class="mt-1 w-full bg-gray-700 border-2 border-gray-600 text-white rounded-lg p-3 focus:border-cyan-500 focus:ring-cyan-500 transition" @bind-Value="owner.Password" />
+
+        </div>
+    </div>
+
+    <div class="mt-8">
+        <button type="submit" class="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-lg py-3 rounded-lg transition">Log In</button>
+    </div>
+</EditForm>
+@if (!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <div class="bg-red-500/10 border border-red-500/30 text-red-300 p-3 rounded-lg mt-6 text-center" role="alert">
+        @errorMessage
+    </div>
+}
+@code {
+    [Parameter]
+    public EventCallback<int> OnLoginSuccess { get; set; }
+
+    private Owner owner = new();
+    private string? errorMessage;
+
+    private async Task HandleLoginAsync()
+    {
+        errorMessage = null;
+        try
+        {
+            if (!(string.IsNullOrWhiteSpace(owner.Email) && string.IsNullOrWhiteSpace(owner.Password)))
+            {
+                var loggedInOwnerId = await OwnerService.LoginAsync(owner);
+                await OnLoginSuccess.InvokeAsync(loggedInOwnerId);
+
+            }
+
+            errorMessage = "All entries field must be filled";
+        }
+        catch (InvalidCredentialsException)
+        {
+            errorMessage = "Email or Password is incorrect!";
+        }
+
+    }
+}
