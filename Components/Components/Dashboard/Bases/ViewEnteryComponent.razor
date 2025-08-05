@@ -6,12 +6,22 @@
         </p>
     </div>
     <div class="flex items-center gap-4">
-        <button class="text-gray-400 hover:text-white font-semibold transition">Edit</button>
-        <button class="text-red-500 hover:text-red-400 font-semibold transition">Delete</button>
+        <button @onclick="HandleEditClick" class="text-gray-400 hover:text-white font-semibold transition">Edit</button>
+        <button @onclick="HandleDeleteClick" class="text-red-500 hover:text-red-400 font-semibold transition">Delete</button>
     </div>
 </div>
 @code {
     [Parameter, EditorRequired]
     public ScheduleEntry entry { get; set; } = new();
+
+    //new
+    [Parameter]
+    public EventCallback<ScheduleEntry> OnEdit { get; set; }
+    [Parameter]
+    public EventCallback<int> OnDelete { get; set; }
+
+    private async Task HandleDeleteClick() => await OnDelete.InvokeAsync(entry.ID);
+
+    private async Task HandleEditClick() => await OnEdit.InvokeAsync(entry);
 
 }
