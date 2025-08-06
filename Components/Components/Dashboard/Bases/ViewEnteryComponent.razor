@@ -1,27 +1,44 @@
-﻿<div class="bg-gray-700/50 p-4 rounded-lg flex items-center justify-between">
+﻿<div class="bg-gray-700/50 p-4 pl-3 rounded-lg flex items-center justify-between border-l-4 @StatusColorClass">
     <div>
-        <p class="font-semibold text-white text-lg">@entry.Title</p>
+        <p class="font-semibold text-white text-lg">@Entry.Title</p>
+        @* <p class="text-sm text-cyan-400 font-mono mt-1">
+            @entry.StartDateTime.ToString("M/d/yyyy"): @entry.StartDateTime.ToLocalTime().ToString("h:mm tt") – @entry.EndDateTime.ToLocalTime().ToString("h:mm tt")
+        </p> *@
         <p class="text-sm text-cyan-400 font-mono mt-1">
-            @entry.StartDateTime.ToString("M/d/yyyy"): @entry.StartDateTime.ToString("h:mm tt") – @entry.EndDateTime.ToString("h:mm tt")
+            @Entry.StartDateTime.ToString("d/M/yyyy"):
+            @Entry.StartDateTime.ToLocalTime().ToString("h:mm tt") –
+            @Entry.EndDateTime.ToLocalTime().ToString("h:mm tt")
+        </p>
+
+        <p class="text-sm mt-1 font-semibold"
+           style="color:@(Entry.IsBusy ? "red" : "lightgreen")">
+            @(Entry.IsBusy ? "🔴 Busy" : "🟢 Free")
         </p>
     </div>
-    <div class="flex items-center gap-4">
-        <button @onclick="HandleEditClick" class="text-gray-400 hover:text-white font-semibold transition">Edit</button>
-        <button @onclick="HandleDeleteClick" class="text-red-500 hover:text-red-400 font-semibold transition">Delete</button>
-    </div>
+    @if (ShowActions)
+    {
+        <div class="flex items-center gap-4">
+            <button @onclick="HandleEditClick" class="text-gray-400 hover:text-white font-semibold transition">Edit</button>
+            <button @onclick="HandleDeleteClick" class="text-red-500 hover:text-red-400 font-semibold transition">Delete</button>
+        </div>
+    }
 </div>
 @code {
     [Parameter, EditorRequired]
-    public ScheduleEntry entry { get; set; } = new();
+    public ScheduleEntry Entry { get; set; } = new();
 
     //new
+    [Parameter]
+    public bool ShowActions { get; set; } = true;
     [Parameter]
     public EventCallback<ScheduleEntry> OnEdit { get; set; }
     [Parameter]
     public EventCallback<int> OnDelete { get; set; }
 
-    private async Task HandleDeleteClick() => await OnDelete.InvokeAsync(entry.ID);
+    private string StatusColorClass => Entry.IsBusy ? "border-red-500" : "border-green-500";
 
-    private async Task HandleEditClick() => await OnEdit.InvokeAsync(entry);
+    private async Task HandleDeleteClick() => await OnDelete.InvokeAsync(Entry.ID);
+
+    private async Task HandleEditClick() => await OnEdit.InvokeAsync(Entry);
 
 }
