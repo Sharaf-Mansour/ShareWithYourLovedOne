@@ -1,26 +1,16 @@
-﻿@* This is our pop-up modal. The "fixed inset-0" classes make it cover the whole screen. *@
-<div class="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+﻿<div class="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
 
-    @* This is the container for our form. It's the white box in the middle. *@
+    @* This is the container for our form*@
     <div class="bg-gray-800 p-8 rounded-2xl shadow-xl w-full max-w-lg">
 
-        <h2 class="text-2xl font-bold text-white mb-6">@formTitle</h2>
-
-        @* This is the EditForm component from Video #52.
-           - 'Model' tells the form which C# object to work with.
-           - 'OnValidSubmit' tells the form which C# method to call when the user clicks the 'submit' button. *@
+        <h2 class="text-2xl font-bold text-white mb-6">@FormTitle</h2
         <EditForm Model="EntryModel" OnValidSubmit="HandleSaveAsync">
-
-            @* This is from Video #53. It automatically enables validation based on rules in our model (which we'll add later). *@
             <DataAnnotationsValidator />
 
             <div class="space-y-4">
                 @* Title Input *@
                 <div>
                     <label for="title" class="block text-sm font-medium text-gray-300">Title</label>
-                    @* This is the magic from Video #25!
-                       '@bind-Value' creates a two-way connection. When the user types in this box,
-                       the 'entryModel.Title' property in our C# code is updated instantly. *@
                     <InputText id="title" class="mt-1 w-full bg-gray-700 border-2 border-gray-600 text-white rounded-lg p-3" @bind-Value="EntryModel.Title" />
                 </div>
 
@@ -45,13 +35,11 @@
 
             @* Form Buttons *@
             <div class="mt-8 flex justify-end gap-4">
-                @* This is the Cancel button. 'type="button"' is important so it doesn't submit the form.
-                   We use the regular '@onclick' from Video #24 to call our cancel method. *@
+                @* This is the Cancel button.*@
                 <button type="button" @onclick="HandelCancelAsync" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition">
                     Cancel
                 </button>
-                @* This is the Save button. 'type="submit"' tells the <EditForm> that this is the button
-                   that should trigger the 'OnValidSubmit' event. *@
+                @* This is the Save button *@
                 <button type="submit" class="bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded-lg transition">
                     Save
                 </button>
@@ -61,32 +49,39 @@
     </div>
 </div>
 @code {
-	[Parameter]
-	public ScheduleEntry? EntryToEdit { get; set; }
+    [Parameter]
+    public ScheduleEntry? EntryToEdit { get; set; }
 
-	[Parameter]
-	public EventCallback<ScheduleEntry> OnSave { get; set; }
+    [Parameter]
+    public string FormTitle { get; set; } = "Add New Entry";
 
-	[Parameter]
-	public EventCallback OnCancel { get; set; }
+    [Parameter]
+    public EventCallback<ScheduleEntry> OnSave { get; set; }
 
-	private ScheduleEntry EntryModel = new();
-	private string formTitle = "Add New Entry";
+    [Parameter]
+    public EventCallback OnCancel { get; set; }
 
-	protected override void OnParametersSet()
-	{
-		if (EntryToEdit is not null)
-		{
+    private ScheduleEntry EntryModel = new();
 
-            EntryModel = EntryToEdit with { };
-            formTitle = "Edit Schedule Entry";
+
+    protected override void OnParametersSet()
+    {
+        if (EntryToEdit is not null)
+        {
+
+            EntryModel = EntryToEdit with
+            {
+             StartDateTime = EntryToEdit.StartDateTime.ToLocalTime(),    
+             EndDateTime = EntryToEdit.EndDateTime.ToLocalTime()    
+            };
+            // formTitle = "Edit Schedule Entry";
 
 		}
 		else
 		{
 
 			EntryModel = new();
-			formTitle = "Add New Entry";
+			// formTitle = "Add New Entry";
 		}
 	}
 
