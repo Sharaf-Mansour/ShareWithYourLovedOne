@@ -1,4 +1,5 @@
 ﻿@inject IJSRuntime JSRuntime
+@inject NavigationManager NavManager
 <div class="bg-gray-800 rounded-2xl shadow-xl w-full max-w-7xl h-[90vh] flex overflow-hidden">
 
     <div class="w-1/3 bg-gray-900/50 p-6 border-r border-gray-700 flex flex-col justify-between">
@@ -13,8 +14,12 @@
     </div>
 
     <div class="w-2/3 flex flex-col">
-        <div class="p-6">
+        <div class="p-6 flex justify-between items-center">
             <h2 class="text-3xl font-bold text-white">Your Schedule</h2>
+
+            <button @onclick="HandleShareLinkAsync" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg transition flex items-center gap-2">
+                Share Link 🔗
+            </button>
         </div>
         <div class="flex-grow p-6 pt-0 overflow-y-auto">
             @if (scheduleEntries.Count > 0)
@@ -36,7 +41,10 @@
 
 @if (isEntryFormVisible)
 {
-    <ScheduleEntryForm EntryToEdit="currentEntryInForm" OnSave="HandleEntrySaveAsync" OnCancel="HideEntryForm" />
+    <ScheduleEntryForm EntryToEdit="currentEntryInForm"
+        OnSave="HandleEntrySaveAsync"
+        OnCancel="HideEntryForm"
+        FormTitle="@(currentEntryInForm.ID == 0 ? "Add New Entry" : "Edit Schedule Entry")" />
 }
 @code
 {
@@ -51,7 +59,7 @@
 
     //new part
     private bool isEntryFormVisible = false;
-    
+
     private ScheduleEntry currentEntryInForm = new();
 
     private void ShowAddEntryForm()
@@ -100,5 +108,20 @@
     {
         currentEntryInForm = entryfromchild;
         isEntryFormVisible = true;
+    }
+    private async Task HandleShareLinkAsync()
+    {
+        try
+        {
+            var apiUrl = $"{NavManager.BaseUri}{LoggedInOwner.RouteToken}";
+            await JSRuntime.InvokeVoidAsync("navigator.clipboard.writeText", apiUrl);
+            await JSRuntime.InvokeVoidAsync("alert", "share link copied to clipboard!");
+        } 
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error generating share link: {ex.Message}");
+            await JSRuntime.InvokeVoidAsync("alert", "Error: Could not generate share link.");
+        }    
+
     }
 }
