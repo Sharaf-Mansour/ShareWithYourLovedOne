@@ -1,4 +1,11 @@
 ﻿<div class="bg-gray-800 p-8 rounded-2xl shadow-xl w-full max-w-md">
+    @if (notify)
+    {
+        <div class="absolute top-0 left-0 right-0 bg-green-600 text-white text-center py-3 animate-fade-in-down">
+            @* Changes Saved Successfully! *@
+            @notfiMessg
+        </div>
+    }
     <div class="text-center mb-8">
         <h1 class="text-3xl font-bold text-white">@(toggel ? "Welcome Back" : "Create an Account")</h1>
         <p class="text-gray-400 mt-2">@(toggel ? "Log in to manage your schedule." : "Get started by creating a account.")</p>
@@ -15,21 +22,34 @@
 
     @if (toggel)
     {
-        <LoginComponent OnLoginSuccess="HandleAuthSuccess"/>
+        <LoginComponent OnLoginSuccess="HandleAuthSuccess" />
     }
     else
     {
-        <SignupComponent OnLoginSuccess="HandleAuthSuccess" />
+        <SignupComponent OnSignupSuccess="HandleSignupSuccess" />
     }
 </div>
 @code {
     [Parameter]
     public EventCallback<int> OnAuthSuccess { get; set; }
+    private bool toggel = true;
+    private bool notify = false;
+    private string? notfiMessg;
 
-    private bool toggel = false;
+    private async Task HandleAuthSuccess(int ownerId) => await OnAuthSuccess.InvokeAsync(ownerId);
+    private async void HandleSignupSuccess() {
+        toggel = true;
+        await sendNotify("Signed up successfully login to continue");
+    }
 
-    private async Task HandleAuthSuccess(int ownerId)
+    private async Task sendNotify(string notifystr)
     {
-        await OnAuthSuccess.InvokeAsync(ownerId);
+        notify = false;
+        notfiMessg = notifystr;
+        notify = true;
+        StateHasChanged();
+        await Task.Delay(3000);
+        notify = false;
+        StateHasChanged();
     }
 }
