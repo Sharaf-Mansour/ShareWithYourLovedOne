@@ -1,19 +1,26 @@
 ﻿@inject IJSRuntime JSRuntime
 @inject NavigationManager NavManager
 <div class="bg-gray-800 rounded-2xl shadow-xl w-full max-w-7xl h-[90vh] flex overflow-hidden">
+    @if(correctModify){
+        <div class="absolute top-0 left-0 right-0 bg-green-600 text-white text-center py-3 animate-fade-in-down">
+            Changes Saved Successfully!
+        </div>
+    }
 
-    <div class="w-1/3 bg-gray-900/50 p-6 border-r border-gray-700 flex flex-col justify-between">
+    <div class="w-1/4 bg-gray-900/50 p-6 border-r border-gray-700 flex flex-col justify-between">
         <div>
             <h2 class="text-3xl font-bold text-white mb-6">@LoggedInOwner.Name</h2>
 
             <button @onclick="ShowAddEntryForm" class="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-lg py-3 rounded-lg transition mb-6">
                 + Add New Entry
             </button>
-
+            <button @onclick="ShowUpdateOwnerForm" class="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-lg py-3 rounded-lg transition mb-6">
+                Modify / Delete Account
+            </button>
         </div>
     </div>
 
-    <div class="w-2/3 flex flex-col">
+    <div class="w-3/4 flex flex-col">
         <div class="p-6 flex justify-between items-center">
             <h2 class="text-3xl font-bold text-white">Your Schedule</h2>
 
@@ -46,16 +53,21 @@
         OnCancel="HideEntryForm"
         FormTitle="@(currentEntryInForm.ID == 0 ? "Add New Entry" : "Edit Schedule Entry")" />
 }
+@if (isOwnerFormVisible)
+{
+    <OwnerUpdateForm ownerUpdateModel="LoggedInOwner"
+                     OnSave="HandleOwnerUpdateAsync" 
+                     OnCancel="HideOwnerForm" />
+}
 @code
 {
     [Parameter, EditorRequired]
     public Owner LoggedInOwner { get; set; } = new();
     private List<ScheduleEntry> scheduleEntries = [];
     protected override async Task OnInitializedAsync() => await LoadScheduleEntries();
-    private async  Task LoadScheduleEntries()
-    {
-        scheduleEntries = (await ScheduleEntryService.RetrieveAllScheduleEntriesForOwnerAsync(LoggedInOwner.ID)).ToList();
-    }
+    private bool isOwnerFormVisible = false;
+    private bool correctModify = false;
+    private async  Task LoadScheduleEntries() => scheduleEntries = (await ScheduleEntryService.RetrieveAllScheduleEntriesForOwnerAsync(LoggedInOwner.ID)).ToList();
 
     //new part
     private bool isEntryFormVisible = false;
@@ -72,12 +84,10 @@
         };
         isEntryFormVisible = true;
     }
-
     private void HideEntryForm()
     {
         isEntryFormVisible = false;
     }
-
     private async Task HandleEntrySaveAsync(ScheduleEntry EntryToSave)
     {
         if (EntryToSave.ID == 0)
@@ -123,5 +133,22 @@
             await JSRuntime.InvokeVoidAsync("alert", "Error: Could not generate share link.");
         }    
 
+    }
+
+    private void ShowUpdateOwnerForm() => isOwnerFormVisible = true;
+    private void HideOwnerForm() => isOwnerFormVisible = false;
+
+    private  async void HandleOwnerUpdateAsync(Owner updatedOwner)
+    {
+        LoggedInOwner = updatedOwner;
+        HideOwnerForm();
+        await notifySucc();
+    }
+    private async Task notifySucc()
+    {
+        correctModify = true;
+        await Task.Delay(3000);
+        correctModify = false;
+        StateHasChanged();
     }
 }
