@@ -1,9 +1,11 @@
 ﻿@inject IJSRuntime JSRuntime
 @inject NavigationManager NavManager
 <div class="bg-gray-800 rounded-2xl shadow-xl w-full max-w-7xl h-[90vh] flex overflow-hidden">
-    @if(correctModify){
+    @if (notify)
+    {
         <div class="absolute top-0 left-0 right-0 bg-green-600 text-white text-center py-3 animate-fade-in-down">
-            Changes Saved Successfully!
+            @* Changes Saved Successfully! *@
+            @notfiMessg
         </div>
     }
 
@@ -17,6 +19,14 @@
             <button @onclick="ShowUpdateOwnerForm" class="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-lg py-3 rounded-lg transition mb-6">
                 Modify / Delete Account
             </button>
+            <div class="flex-grow"></div>
+            <div class="space-y-2">
+                <hr class="border-gray-700 mb-4" />
+
+                <button @onclick="() => OnSignOut.InvokeAsync()" class="w-full text-left px-4 py-2 rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white transition flex items-center gap-3">
+                    Sign Out
+                </button>
+            </div>
         </div>
     </div>
 
@@ -49,25 +59,29 @@
 @if (isEntryFormVisible)
 {
     <ScheduleEntryForm EntryToEdit="currentEntryInForm"
-        OnSave="HandleEntrySaveAsync"
-        OnCancel="HideEntryForm"
-        FormTitle="@(currentEntryInForm.ID == 0 ? "Add New Entry" : "Edit Schedule Entry")" />
+                       OnSave="HandleEntrySaveAsync"
+                       OnCancel="HideEntryForm"
+                       FormTitle="@(currentEntryInForm.ID == 0 ? "Add New Entry" : "Edit Schedule Entry")" />
 }
 @if (isOwnerFormVisible)
 {
     <OwnerUpdateForm ownerUpdateModel="LoggedInOwner"
-                     OnSave="HandleOwnerUpdateAsync" 
+                     OnSave="HandleOwnerUpdateAsync"
                      OnCancel="HideOwnerForm" />
 }
 @code
 {
     [Parameter, EditorRequired]
     public Owner LoggedInOwner { get; set; } = new();
+    [Parameter]
+    public EventCallback OnSignOut { get; set; }
+
     private List<ScheduleEntry> scheduleEntries = [];
     protected override async Task OnInitializedAsync() => await LoadScheduleEntries();
     private bool isOwnerFormVisible = false;
-    private bool correctModify = false;
-    private async  Task LoadScheduleEntries() => scheduleEntries = (await ScheduleEntryService.RetrieveAllScheduleEntriesForOwnerAsync(LoggedInOwner.ID)).ToList();
+    private bool notify = false;
+    private string? notfiMessg;
+    private async Task LoadScheduleEntries() => scheduleEntries = (await ScheduleEntryService.RetrieveAllScheduleEntriesForOwnerAsync(LoggedInOwner.ID)).ToList();
 
     //new part
     private bool isEntryFormVisible = false;
@@ -79,8 +93,8 @@
         var now = DateTime.Now;
         currentEntryInForm = new()
         {
-        StartDateTime = now,
-        EndDateTime = now.AddHours(1)
+            StartDateTime = now,
+            EndDateTime = now.AddHours(1)
         };
         isEntryFormVisible = true;
     }
@@ -97,11 +111,12 @@
         }
         else
         {
-            await ScheduleEntryService.ModifyScheduleEntryAsync(EntryToSave);    
+            await ScheduleEntryService.ModifyScheduleEntryAsync(EntryToSave);
         }
 
         isEntryFormVisible = false;
         await LoadScheduleEntries();
+        await sendNotify("Changes Saved Successfully!");
     }
 
     private async Task HandleDeleteAsync(int EntryIdToDelete)
@@ -124,31 +139,36 @@
         try
         {
             var apiUrl = $"{NavManager.BaseUri}{LoggedInOwner.RouteToken}";
+
             await JSRuntime.InvokeVoidAsync("navigator.clipboard.writeText", apiUrl);
-            await JSRuntime.InvokeVoidAsync("alert", "share link copied to clipboard!");
-        } 
+            // await JSRuntime.InvokeVoidAsync("alert", "share link copied to clipboard!");
+            await sendNotify("share link copied to clipboard!");
+        }
         catch (Exception ex)
         {
             Console.WriteLine($"Error generating share link: {ex.Message}");
             await JSRuntime.InvokeVoidAsync("alert", "Error: Could not generate share link.");
-        }    
+        }
 
     }
 
     private void ShowUpdateOwnerForm() => isOwnerFormVisible = true;
     private void HideOwnerForm() => isOwnerFormVisible = false;
 
-    private  async void HandleOwnerUpdateAsync(Owner updatedOwner)
+    private async ValueTask HandleOwnerUpdateAsync(Owner updatedOwner)
     {
         LoggedInOwner = updatedOwner;
         HideOwnerForm();
-        await notifySucc();
+        await sendNotify("Changes Saved Successfully!");
     }
-    private async Task notifySucc()
+    private async ValueTask sendNotify(string notifystr)
     {
-        correctModify = true;
+        notify = false;
+        notfiMessg = notifystr;
+        notify = true;
+        StateHasChanged();
         await Task.Delay(3000);
-        correctModify = false;
+        notify = false;
         StateHasChanged();
     }
 }

@@ -20,13 +20,11 @@
     {
         loggedInOwner = await OwnerService.RetrieveOwnerByIdAsync(ownerId) ?? new();
         isLoggedIn = true;
-        StateHasChanged();
     }
     private void HandleSignOut()
     {
         isLoggedIn = false;
         loggedInOwner = new();
-        // StateHasChanged() is useful here because it's a synchronous method.
         StateHasChanged();
     }
 
