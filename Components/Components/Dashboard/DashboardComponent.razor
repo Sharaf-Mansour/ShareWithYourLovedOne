@@ -155,7 +155,7 @@
     private void ShowUpdateOwnerForm() => isOwnerFormVisible = true;
     private void HideOwnerForm() => isOwnerFormVisible = false;
 
-    private async ValueTask HandleOwnerUpdateAsync(Owner updatedOwner)
+    private async Task HandleOwnerUpdateAsync(Owner updatedOwner)
     {
         LoggedInOwner = updatedOwner;
         HideOwnerForm();
