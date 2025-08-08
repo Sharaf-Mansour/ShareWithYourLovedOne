@@ -5,10 +5,29 @@
     @if (isLoggedIn)
     {
 
-        <DashboardComponent LoggedInOwner="loggedInOwner" />
+        <DashboardComponent LoggedInOwner="loggedInOwner" OnSignOut="HandleSignOut" />
     }
     else
     {
         <AuthComponent OnAuthSuccess="HandleLoginSuccess" />
     }
 </div>
+@code {
+    private bool isLoggedIn = false;
+    private Owner loggedInOwner = new();
+
+    private async Task HandleLoginSuccess(int ownerId)
+    {
+        loggedInOwner = await OwnerService.RetrieveOwnerByIdAsync(ownerId) ?? new();
+        isLoggedIn = true;
+        StateHasChanged();
+    }
+    private void HandleSignOut()
+    {
+        isLoggedIn = false;
+        loggedInOwner = new();
+        // StateHasChanged() is useful here because it's a synchronous method.
+        StateHasChanged();
+    }
+
+}
