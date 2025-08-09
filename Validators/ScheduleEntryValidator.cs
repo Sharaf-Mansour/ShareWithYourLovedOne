@@ -14,7 +14,13 @@ namespace Library.Validators
                 .NotEmpty()
                 .WithMessage("start time is required");
 
+            RuleFor(entry => entry.EndDateTime)
+                .NotEmpty()
+                .WithMessage("End Time is required");
 
+            RuleFor(entry => entry.EndDateTime)
+                .GreaterThan(entry => entry.StartDateTime)
+                .WithMessage("End Time must be after Start time");
         }
     }
 }
