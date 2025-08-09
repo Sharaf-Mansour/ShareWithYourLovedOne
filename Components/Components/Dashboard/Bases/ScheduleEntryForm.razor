@@ -5,25 +5,29 @@
 
         <h2 class="text-2xl font-bold text-white mb-6">@FormTitle</h2>
         <EditForm Model="EntryModel" OnValidSubmit="HandleSaveAsync">
-            <DataAnnotationsValidator />
+            <FluentValidationValidator/>
 
             <div class="space-y-4">
                 @* Title Input *@
                 <div>
                     <label for="title" class="block text-sm font-medium text-gray-300">Title</label>
                     <InputText id="title" class="mt-1 w-full bg-gray-700 border-2 border-gray-600 text-white rounded-lg p-3" @bind-Value="EntryModel.Title" />
+                    <ValidationMessage For="@(() => EntryModel.Title)" class="text-red-400 text-sm mt-1"/>
                 </div>
 
                 @* Start DateTime Input *@
                 <div>
                     <label for="start-time" class="block text-sm font-medium text-gray-300">Start Time</label>
                     <InputDate id="start-time" Type="InputDateType.DateTimeLocal" class="mt-1 w-full bg-gray-700 border-2 border-gray-600 text-white rounded-lg p-3" @bind-Value="EntryModel.StartDateTime" />
+                    <ValidationMessage For="@(() => EntryModel.StartDateTime)" class="text-red-400 text-sm mt-1" />
+
                 </div>
 
                 @* End DateTime Input *@
                 <div>
                     <label for="end-time" class="block text-sm font-medium text-gray-300">End Time</label>
                     <InputDate id="end-time" Type="InputDateType.DateTimeLocal" class="mt-1 w-full bg-gray-700 border-2 border-gray-600 text-white rounded-lg p-3" @bind-Value="EntryModel.EndDateTime" />
+                    <ValidationMessage For="@(() => EntryModel.EndDateTime)" class="text-red-400 text-sm mt-1" />
                 </div>
 
                 @* Is Busy Checkbox *@
