@@ -1,12 +1,12 @@
 ﻿global using Dapper;
-global using Library.Brokers.Storages;
-global using Library.Controllers;
-global using Library.Models;
-global using Library.Services.Foundations;
+global using ShareWithYourLovedOne.Brokers.Storages;
+global using ShareWithYourLovedOne.Controllers;
+global using ShareWithYourLovedOne.Models;
+global using ShareWithYourLovedOne.Services.Foundations;
 global using System.Text.Json.Serialization;
 using Arora.Blazor.StateContainer;
 using Arora.GlobalExceptionHandler;
-using Library.Components;
+using ShareWithYourLovedOne.Components;
 using Scalar.AspNetCore;
 using System.Diagnostics;
 
