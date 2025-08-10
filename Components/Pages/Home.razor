@@ -1,11 +1,10 @@
 ﻿@page "/"
-<PageTitle>Home</PageTitle>
+<div class="min-h-screen bg-gray-900 font-sans flex items-center justify-center p-4 sm:p-6 md:p-8">
 
-<div class="min-h-screen bg-gray-900 font-sans flex items-center justify-center p-4">
     @if (isLoggedIn)
     {
 
-        <DashboardComponent LoggedInOwner="loggedInOwner" OnSignOut="HandleSignOut" />
+        <DashboardComponent ownerId="loggedInOwner" OnSignOut="HandleSignOut" />
     }
     else
     {
@@ -14,17 +13,35 @@
 </div>
 @code {
     private bool isLoggedIn = false;
-    private Owner loggedInOwner = new();
+    private int loggedInOwner;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+
+        if (firstRender)
+        {
+            var result = await ProtectedLocalStorage.GetAsync<int>("owner");
+            if (result.Success)
+            {
+                loggedInOwner = result.Value;
+                isLoggedIn = true;
+                StateHasChanged();
+            }
+        }
+    }
 
     private async Task HandleLoginSuccess(int ownerId)
     {
-        loggedInOwner = await OwnerService.RetrieveOwnerByIdAsync(ownerId) ?? new();
+        loggedInOwner = ownerId;
+        await ProtectedLocalStorage.SetAsync("owner", loggedInOwner);
         isLoggedIn = true;
+        StateHasChanged();
     }
     private void HandleSignOut()
     {
         isLoggedIn = false;
         loggedInOwner = new();
+        ProtectedLocalStorage.DeleteAsync("owner");
         StateHasChanged();
     }
 
