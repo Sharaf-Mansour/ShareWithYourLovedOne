@@ -1,6 +1,6 @@
-﻿using Library.Services.Foundations;
+﻿using ShareWithYourLovedOne.Services.Foundations;
 
-namespace Library.Controllers;
+namespace ShareWithYourLovedOne.Controllers;
 public static partial class ControllersExtentions
 {
     private static async ValueTask<IResult> PostScheduleEntryAsync(IScheduleEntryService scheduleEntryService, CreateScheduleEntryDto scheduleEntryDto)

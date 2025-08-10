@@ -1,4 +1,4 @@
-﻿namespace Library.Controllers;
+﻿namespace ShareWithYourLovedOne.Controllers;
 public partial class ControllersExtentions
 {
     public static WebApplication MapOwnerController(this WebApplication app)

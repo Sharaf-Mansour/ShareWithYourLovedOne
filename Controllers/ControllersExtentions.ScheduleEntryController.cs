@@ -1,4 +1,4 @@
-﻿namespace Library.Controllers;
+﻿namespace ShareWithYourLovedOne.Controllers;
 public static partial class ControllersExtentions
 {
     public static WebApplication MapScheduleEntryEndpoints(this WebApplication app)

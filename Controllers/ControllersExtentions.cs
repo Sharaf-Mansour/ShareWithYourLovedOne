@@ -1,2 +1,2 @@
-﻿namespace Library.Controllers;
+﻿namespace ShareWithYourLovedOne.Controllers;
 public static partial class ControllersExtentions;

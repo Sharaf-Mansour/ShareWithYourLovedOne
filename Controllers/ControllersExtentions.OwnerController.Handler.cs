@@ -1,4 +1,4 @@
-﻿namespace Library.Controllers;
+﻿namespace ShareWithYourLovedOne.Controllers;
 public static partial class ControllersExtentions
 {
     static async ValueTask<IResult> GetAllOwnersAsync(IOwnerService ownerService) =>
