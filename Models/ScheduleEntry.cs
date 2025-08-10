@@ -1,4 +1,4 @@
-﻿namespace Library.Models;
+﻿namespace ShareWithYourLovedOne.Models;
 public record ScheduleEntry : BaseEntity
 {
     [JsonPropertyName("title")]

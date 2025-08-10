@@ -1,4 +1,4 @@
-﻿namespace Library.Models
+﻿namespace ShareWithYourLovedOne.Models
 {
     public class EmailAlreadyInUse : Exception;
     public class InvalidCredentialsException : Exception;
