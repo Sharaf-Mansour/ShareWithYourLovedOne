@@ -1,6 +1,5 @@
 ﻿global using Dapper;
 global using ShareWithYourLovedOne.Brokers.Storages;
-global using ShareWithYourLovedOne.Controllers;
 global using ShareWithYourLovedOne.Models;
 global using ShareWithYourLovedOne.Services.Foundations;
 global using System.Text.Json.Serialization;
@@ -21,18 +20,7 @@ builder.Services.AddRazorComponents()
 builder.Services.AddStateContainer();
 builder.Services.AddOpenApi();
 
-builder.Services.AddCors(options =>
-{
-    options.AddDefaultPolicy(policy =>
-    {
-        policy.AllowAnyOrigin()
-              .AllowAnyMethod()
-              .AllowAnyHeader();
-    });
-});
-
 var app = builder.Build();
-app.UseCors(); //cors
 
 if (app.Environment.IsDevelopment())
     Process.Start(new ProcessStartInfo
@@ -84,8 +72,6 @@ app.MapScalarApiReference(options =>
         """);
     //.WithFavicon(app.Configuration.GetValue<string>("FavIcon") ?? "");
 });
-
-app.MapOwnerController().MapScheduleEntryEndpoints().MapPublicScheduleEndpoints();
 
 app.UseHttpsRedirection();
 app.MapRazorComponents<App>()
