@@ -1,24 +1,26 @@
 ﻿@inject IJSRuntime JSRuntime
 @inject NavigationManager NavManager
-<div class="bg-gray-800 rounded-2xl shadow-xl w-full max-w-7xl h-[90vh] flex overflow-hidden">
+<PageTitle>Home</PageTitle>
+<div class="bg-gray-800 rounded-2xl shadow-xl w-full max-w-7xl h-auto md:h-[90vh] flex flex-col md:flex-row overflow-hidden">
     @if (notify)
     {
         <div class="absolute top-0 left-0 right-0 bg-green-600 text-white text-center py-3 animate-fade-in-down">
-            @* Changes Saved Successfully! *@
             @notfiMessg
         </div>
     }
 
-    <div class="w-1/4 bg-gray-900/50 p-6 border-r border-gray-700 flex flex-col justify-between">
+    <!-- Sidebar -->
+    <div class="w-full md:w-1/4 bg-gray-900/50 p-6 border-b md:border-b-0 md:border-r border-gray-700 flex flex-col justify-between">
         <div>
-            <h2 class="text-3xl font-bold text-white mb-6">@LoggedInOwner.Name</h2>
+            <h2 class="text-2xl sm:text-3xl font-bold text-white mb-6">@LoggedInOwner.Name</h2>
 
-            <button @onclick="ShowAddEntryForm" class="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-lg py-3 rounded-lg transition mb-6">
+            <button @onclick="ShowAddEntryForm" class="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-lg py-3 rounded-lg transition mb-4 sm:mb-6">
                 + Add New Entry
             </button>
-            <button @onclick="ShowUpdateOwnerForm" class="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-lg py-3 rounded-lg transition mb-6">
+            <button @onclick="ShowUpdateOwnerForm" class="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-lg py-3 rounded-lg transition mb-4 sm:mb-6">
                 Modify / Delete Account
             </button>
+
             <div class="flex-grow"></div>
             <div class="space-y-2">
                 <hr class="border-gray-700 mb-4" />
@@ -30,15 +32,17 @@
         </div>
     </div>
 
-    <div class="w-3/4 flex flex-col">
-        <div class="p-6 flex justify-between items-center">
-            <h2 class="text-3xl font-bold text-white">Your Schedule</h2>
+    <!-- Main Content -->
+    <div class="w-full md:w-3/4 flex flex-col">
+        <div class="p-4 sm:p-6 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+            <h2 class="text-2xl sm:text-3xl font-bold text-white">Your Schedule</h2>
 
             <button @onclick="HandleShareLinkAsync" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg transition flex items-center gap-2">
                 Share Link 🔗
             </button>
         </div>
-        <div class="flex-grow p-6 pt-0 overflow-y-auto">
+
+        <div class="flex-grow p-4 sm:p-6 pt-0 overflow-y-auto">
             @if (scheduleEntries.Count > 0)
             {
                 <div class="space-y-3">
@@ -72,16 +76,28 @@
 @code
 {
     [Parameter, EditorRequired]
-    public Owner LoggedInOwner { get; set; } = new();
+    public int ownerId { get; set; }
     [Parameter]
     public EventCallback OnSignOut { get; set; }
 
+    private Owner LoggedInOwner = new();
     private List<ScheduleEntry> scheduleEntries = [];
-    protected override async Task OnInitializedAsync() => await LoadScheduleEntries();
     private bool isOwnerFormVisible = false;
     private bool notify = false;
     private string? notfiMessg;
-    private async Task LoadScheduleEntries() => scheduleEntries = (await ScheduleEntryService.RetrieveAllScheduleEntriesForOwnerAsync(LoggedInOwner.ID)).ToList();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await getOwner();
+        await LoadScheduleEntries();
+    }
+    // protected override async Task OnInitializedAsync() 
+    // {
+    //     await ProtectedLocalStorage.GetAsync<Owner>("LoggedInOwner");
+    //     await LoadScheduleEntries();
+    // }
+    private async ValueTask getOwner() => LoggedInOwner = await OwnerService.RetrieveOwnerByIdAsync(ownerId) ?? new();
+    private async ValueTask LoadScheduleEntries() => scheduleEntries = (await ScheduleEntryService.RetrieveAllScheduleEntriesForOwnerAsync(ownerId)).ToList();
 
     //new part
     private bool isEntryFormVisible = false;
@@ -161,7 +177,7 @@
         HideOwnerForm();
         await sendNotify("Changes Saved Successfully!");
     }
-    private async ValueTask sendNotify(string notifystr)
+    private async Task sendNotify(string notifystr)
     {
         notify = false;
         notfiMessg = notifystr;
