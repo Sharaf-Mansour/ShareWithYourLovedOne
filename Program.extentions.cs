@@ -1,4 +1,4 @@
-﻿namespace Library
+﻿namespace ShareWithYourLovedOne
 {
     public static partial class Program
     {
