@@ -1,4 +1,4 @@
-﻿namespace Library.Services.Foundations;
+﻿namespace ShareWithYourLovedOne.Services.Foundations;
 public class ScheduleEntryService(IStorageBroker storageBroker) : IScheduleEntryService
 {
     public async ValueTask AddScheduleEntryAsync(ScheduleEntry scheduleEntry) =>

@@ -1,4 +1,4 @@
-﻿namespace Library.Services.Foundations;
+﻿namespace ShareWithYourLovedOne.Services.Foundations;
 public class OwnerService(IStorageBroker storageBroker) : IOwnerService
 {
     public async ValueTask AddOwnerAsync(Owner owner)

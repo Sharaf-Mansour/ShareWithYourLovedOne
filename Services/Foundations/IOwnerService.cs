@@ -1,4 +1,4 @@
-﻿namespace Library.Services.Foundations;
+﻿namespace ShareWithYourLovedOne.Services.Foundations;
 public interface IOwnerService
 {
     ValueTask AddOwnerAsync(Owner onwer);

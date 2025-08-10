@@ -1,4 +1,4 @@
-﻿namespace Library.Services.Foundations;
+﻿namespace ShareWithYourLovedOne.Services.Foundations;
 public interface IScheduleEntryService
 {
     ValueTask AddScheduleEntryAsync(ScheduleEntry scheduleEntry);
