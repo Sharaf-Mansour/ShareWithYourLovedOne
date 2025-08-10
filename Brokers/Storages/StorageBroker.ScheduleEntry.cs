@@ -1,6 +1,6 @@
-﻿using Library.Models;
+﻿using ShareWithYourLovedOne.Models;
 
-namespace Library.Brokers.Storages;
+namespace ShareWithYourLovedOne.Brokers.Storages;
 public partial class StorageBroker : IStorageBroker
 {
     public async ValueTask InsertScheduleEntryAsync(ScheduleEntry scheduleEntry)

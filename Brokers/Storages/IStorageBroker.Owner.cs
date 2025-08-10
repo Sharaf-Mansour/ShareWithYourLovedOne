@@ -1,4 +1,4 @@
-﻿namespace Library.Brokers.Storages;
+﻿namespace ShareWithYourLovedOne.Brokers.Storages;
 public partial interface IStorageBroker
 {
     ValueTask InsertOwnerAsync(Owner Owner);
