@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-namespace Library.Validators;
+namespace ShareWithYourLovedOne.Validators;
 public class OwnerValidator : AbstractValidator<Owner>
 {
     public OwnerValidator()

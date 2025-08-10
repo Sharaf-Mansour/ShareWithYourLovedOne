@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace Library.Validators
+namespace ShareWithYourLovedOne.Validators
 {
     public class ScheduleEntryValidator : AbstractValidator<ScheduleEntry>
     {
