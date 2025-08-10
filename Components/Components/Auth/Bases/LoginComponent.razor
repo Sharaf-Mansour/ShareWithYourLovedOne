@@ -1,5 +1,5 @@
 ﻿<EditForm Model="owner" OnValidSubmit="HandleLogInAsync">
-    <FluentValidationValidator />
+    <FluentValidationValidator Options="@(x => x.IncludeRuleSets("Login"))" />
     <div class="space-y-6">
         <div>
             <label for="login-email" class="block text-sm font-medium text-gray-300">Email Address</label>
@@ -27,7 +27,7 @@
     [Parameter]
     public EventCallback<int> OnLoginSuccess { get; set; }
 
-    private Owner owner = new();
+    private Owner owner { get; set; }= new Owner();
     private string? errorMessage;
 
     private async Task HandleLogInAsync()
