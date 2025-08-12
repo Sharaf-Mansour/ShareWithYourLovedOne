@@ -15,7 +15,7 @@ public class OwnerValidator : AbstractValidator<Owner>
 
         RuleFor(x => x.Password)
             .NotEmpty().WithMessage("Password cannot be empty.")
-            .MinimumLength(8).WithMessage("New password must be at least 8 characters.");
+            .MinimumLength(8).WithMessage("Password must be at least 8 characters.");
 
         RuleSet("Login", () =>
         {
