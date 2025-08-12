@@ -1,15 +1,11 @@
 ﻿<div class="bg-gray-700/50 p-4 pl-3 rounded-lg flex items-center justify-between border-l-4 @StatusColorClass">
     <div>
         <p class="font-semibold text-white text-lg">@Entry.Title</p>
-        @* <p class="text-sm text-cyan-400 font-mono mt-1">
-            @entry.StartDateTime.ToString("M/d/yyyy"): @entry.StartDateTime.ToLocalTime().ToString("h:mm tt") – @entry.EndDateTime.ToLocalTime().ToString("h:mm tt")
-        </p> *@
         <p class="text-sm text-cyan-400 font-mono mt-1">
             @Entry.StartDateTime.ToString("d/M/yyyy"):
             @Entry.StartDateTime.ToLocalTime().ToString("h:mm tt") –
             @Entry.EndDateTime.ToLocalTime().ToString("h:mm tt")
         </p>
-
         <p class="text-sm mt-1 font-semibold"
            style="color:@(Entry.IsBusy ? "red" : "lightgreen")">
             @(Entry.IsBusy ? "🔴 Busy" : "🟢 Free")
@@ -26,8 +22,6 @@
 @code {
     [Parameter, EditorRequired]
     public ScheduleEntry Entry { get; set; } = new();
-
-    //new
     [Parameter]
     public bool ShowActions { get; set; } = true;
     [Parameter]
@@ -36,9 +30,6 @@
     public EventCallback<int> OnDelete { get; set; }
 
     private string StatusColorClass => Entry.IsBusy ? "border-red-500" : "border-green-500";
-
     private async Task HandleDeleteClick() => await OnDelete.InvokeAsync(Entry.ID);
-
     private async Task HandleEditClick() => await OnEdit.InvokeAsync(Entry);
-
 }

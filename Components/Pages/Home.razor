@@ -1,9 +1,7 @@
 ﻿@page "/"
 <div class="min-h-screen bg-gray-900 font-sans flex items-center justify-center p-4 sm:p-6 md:p-8">
-
     @if (isLoggedIn)
     {
-
         <DashboardComponent ownerId="loggedInOwner" OnSignOut="HandleSignOut" />
     }
     else
@@ -17,7 +15,6 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-
         if (firstRender)
         {
             var result = await ProtectedLocalStorage.GetAsync<int>("owner");
@@ -29,7 +26,6 @@
             }
         }
     }
-
     private async Task HandleLoginSuccess(int ownerId)
     {
         loggedInOwner = ownerId;
@@ -44,5 +40,4 @@
         ProtectedLocalStorage.DeleteAsync("owner");
         StateHasChanged();
     }
-
 }
