@@ -5,8 +5,9 @@ global using ShareWithYourLovedOne.Services.Foundations;
 global using System.Text.Json.Serialization;
 using Arora.Blazor.StateContainer;
 using Arora.GlobalExceptionHandler;
-using ShareWithYourLovedOne.Components;
+using Blazored.Toast;
 using Scalar.AspNetCore;
+using ShareWithYourLovedOne.Components;
 using System.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +18,7 @@ builder.Services.AddTransient<IScheduleEntryService, ScheduleEntryService>();
 builder.Services.AddTransient<IStorageBroker, StorageBroker>();
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+builder.Services.AddBlazoredToast();
 builder.Services.AddStateContainer();
 builder.Services.AddOpenApi();
 
