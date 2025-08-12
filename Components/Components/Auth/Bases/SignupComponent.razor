@@ -17,12 +17,7 @@
             <ValidationMessage For="@(() => owner.Password)" class="text-red-400 text-sm mt-1" />
         </div>
     </div>
-    @if (!string.IsNullOrWhiteSpace(errorMessage))
-    {
-        <div class="bg-red-500/10 border border-red-500/30 text-red-300 p-3 rounded-lg mt-6 text-center" role="alert">
-            @errorMessage
-        </div>
-    }
+    <ExceptionErrorMessage Message="@errorMessage" />
     <div class="mt-8">
         <button type="submit" class="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-lg py-3 rounded-lg transition">Create Account</button>
     </div>
@@ -30,7 +25,6 @@
 @code {
     [Parameter]
     public EventCallback<int> OnSignupSuccess { get; set; }
-
     private Owner owner = new();
     private string? errorMessage;
 
@@ -47,5 +41,4 @@
             errorMessage = "Email already in use";
         }
     }
-
 }

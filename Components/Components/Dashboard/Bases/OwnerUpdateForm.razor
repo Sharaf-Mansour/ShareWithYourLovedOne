@@ -1,11 +1,8 @@
 ﻿<div class="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
     <div class="bg-gray-800 p-8 rounded-2xl shadow-xl w-full max-w-lg">
         <h2 class="text-2xl font-bold text-white mb-6">Modify Account Details</h2>
-
         <EditForm Model="ownerUpdateModel" OnValidSubmit="HandleSaveAsync">
             <FluentValidationValidator />
-            
-
             <div class="space-y-4">
                 <div>
                     <label for="owner-name" class="block text-sm font-medium text-gray-300">Full Name</label>
@@ -23,16 +20,8 @@
                     <ValidationMessage For="@(() => tempOwner.Password)" class="text-red-400 text-sm mt-1" />
                 </div>
             </div>
-            @if (!string.IsNullOrWhiteSpace(errorMessage))
-            {
-                <div class="bg-red-500/10 border border-red-500/30 text-red-300 p-3 rounded-lg mt-6 text-center" role="alert">
-                    @errorMessage
-                </div>
-            }
+            <ExceptionErrorMessage Message="@errorMessage" />
             <div class="mt-8 flex justify-end gap-4">
-                @* <button type="button" @onclick="HandelDeleteAsync" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition">
-                    Delete
-                </button> *@
                 <button type="button" @onclick="HandelCancelAsync" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition">
                     Cancel
                 </button>
@@ -41,30 +30,24 @@
                 </button>
             </div>
         </EditForm>
-
     </div>
 </div>
 @code {
     [Parameter, EditorRequired]
     public Owner ownerUpdateModel { get; set; } = new();
-
     [Parameter]
     public EventCallback<Owner> OnSave { get; set; }
-
     [Parameter]
     public EventCallback OnCancel { get; set; }
-
     private string? errorMessage;
-
     private Owner tempOwner = new();
 
     protected override void OnInitialized() => tempOwner = ownerUpdateModel with { };
-
+    private async Task HandelCancelAsync() => await OnCancel.InvokeAsync();
 
     private async Task HandleSaveAsync()
     {
         errorMessage = null;
-
         try
         {
             await OwnerService.ModifyOwnerAsync(tempOwner);
@@ -74,11 +57,5 @@
         {
             errorMessage = "Email already in use";
         }
-
     }
-    private async Task HandelCancelAsync() => await OnCancel.InvokeAsync();
-    // private async Task HandelDeleteAsync()
-    // {
-    //     await OwnerService.RemoveOwnerByIdAsync(ownerUpdateModel.ID);need to go but will signout
-    // }
 }
