@@ -1,0 +1,24 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0" />
+    <base href="/" />
+    <ImportMap />
+    <HeadOutlet @rendermode="InteractiveServer" />
+    <link rel="stylesheet" href="@Assets["style.css"]" />
+    <link rel="stylesheet" href="@Assets["ShareWithYourLovedOne.styles.css"]" />
+    <link rel="icon" href="@Assets["favicon.png"]" />
+    <title>ShareWithYourLovedOne</title>
+    <link rel="manifest" href="@Assets["manifest.webmanifest"]" />
+
+</head>
+
+<body>
+    <Routes @rendermode="InteractiveServer" />
+    <script src="_framework/blazor.web.js"></script>
+    <script src="js/clipboard.js"></script>
+</body>
+
+</html>

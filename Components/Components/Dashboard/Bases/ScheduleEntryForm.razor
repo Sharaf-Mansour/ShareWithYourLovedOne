@@ -1,0 +1,89 @@
+﻿<div class="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+
+	@* This is the container for our form*@
+	<div class="bg-gray-800 p-8 rounded-2xl shadow-xl w-full max-w-lg">
+
+		<h2 class="text-2xl font-bold text-white mb-6">@FormTitle</h2>
+		<EditForm Model="EntryModel" OnValidSubmit="HandleSaveAsync">
+			<FluentValidationValidator />
+
+			<div class="space-y-4">
+				@* Title Input *@
+				<div>
+					<label for="title" class="block text-sm font-medium text-gray-300">Title</label>
+					<InputText id="title" class="mt-1 w-full bg-gray-700 border-2 border-gray-600 text-white rounded-lg p-3" @bind-Value="EntryModel.Title" />
+					<ValidationMessage For="@(() => EntryModel.Title)" class="text-red-400 text-sm mt-1" />
+				</div>
+
+				@* Start DateTime Input *@
+				<div>
+					<label for="start-time" class="block text-sm font-medium text-gray-300">Start Time</label>
+					<InputDate id="start-time" Type="InputDateType.DateTimeLocal" class="mt-1 w-full bg-gray-700 border-2 border-gray-600 text-white rounded-lg p-3" @bind-Value="EntryModel.StartDateTime" />
+					<ValidationMessage For="@(() => EntryModel.StartDateTime)" class="text-red-400 text-sm mt-1" />
+
+				</div>
+
+				@* End DateTime Input *@
+				<div>
+					<label for="end-time" class="block text-sm font-medium text-gray-300">End Time</label>
+					<InputDate id="end-time" Type="InputDateType.DateTimeLocal" class="mt-1 w-full bg-gray-700 border-2 border-gray-600 text-white rounded-lg p-3" @bind-Value="EntryModel.EndDateTime" />
+					<ValidationMessage For="@(() => EntryModel.EndDateTime)" class="text-red-400 text-sm mt-1" />
+				</div>
+
+				@* Is Busy Checkbox *@
+				<div class="flex items-center">
+					<InputCheckbox id="is-busy" class="h-4 w-4 rounded bg-gray-700 border-gray-600 text-cyan-600" @bind-Value="EntryModel.IsBusy" />
+					<label for="is-busy" class="ml-2 block text-sm text-gray-300">Mark as busy</label>
+				</div>
+			</div>
+
+			@* Form Buttons *@
+			<div class="mt-8 flex justify-end gap-4">
+				@* This is the Cancel button.*@
+				<button type="button" @onclick="HandelCancelAsync" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition">
+					Cancel
+				</button>
+				@* This is the Save button *@
+				<button type="submit" class="bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded-lg transition">
+					Save
+				</button>
+			</div>
+
+		</EditForm>
+	</div>
+</div>
+@code {
+	[Parameter]
+	public ScheduleEntry? EntryToEdit { get; set; }
+
+	[Parameter]
+	public string FormTitle { get; set; } = "Add New Entry";
+
+	[Parameter]
+	public EventCallback<ScheduleEntry> OnSave { get; set; }
+
+	[Parameter]
+	public EventCallback OnCancel { get; set; }
+
+	private ScheduleEntry EntryModel = new();
+
+	protected override void OnParametersSet()
+	{
+		if (EntryToEdit is not null)
+		{
+
+			EntryModel = EntryToEdit with
+			{
+				StartDateTime = EntryToEdit.StartDateTime.ToLocalTime(),
+				EndDateTime = EntryToEdit.EndDateTime.ToLocalTime()
+			};
+		}
+		else
+		{
+
+			EntryModel = new();
+		}
+	}
+	private async Task HandleSaveAsync() => await OnSave.InvokeAsync(EntryModel);
+	private async Task HandelCancelAsync() => await OnCancel.InvokeAsync();
+}

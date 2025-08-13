@@ -1,6 +1,6 @@
-﻿namespace Library.Models;
+﻿namespace ShareWithYourLovedOne.Models;
 public record BaseEntity
 {
     [JsonPropertyName("id")]
-    public int Id { get; set; }
+    public int ID { get; set; }
 }

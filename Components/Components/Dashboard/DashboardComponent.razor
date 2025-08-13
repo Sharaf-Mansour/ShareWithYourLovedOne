@@ -1,0 +1,149 @@
+﻿<PageTitle>Home</PageTitle>
+<div class="bg-gray-800 rounded-2xl shadow-xl w-full max-w-7xl h-auto md:h-[90vh] flex flex-col md:flex-row overflow-hidden">
+    <!-- Sidebar -->
+    <div class="w-full md:w-1/4 bg-gray-900/50 p-6 border-b md:border-b-0 md:border-r border-gray-700 flex flex-col justify-between">
+        <div>
+            <h2 class="text-2xl sm:text-3xl font-bold text-white mb-6">@LoggedInOwner.Name</h2>
+            <button @onclick="ShowAddEntryForm" class="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-lg py-3 rounded-lg transition mb-4 sm:mb-6">
+                + Add New Entry
+            </button>
+            <button @onclick="ShowUpdateOwnerForm" class="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-lg py-3 rounded-lg transition mb-4 sm:mb-6">
+                Modify / Delete Account
+            </button>
+            <div class="flex-grow"></div>
+            <div class="space-y-2">
+                <hr class="border-gray-700 mb-4" />
+                <button @onclick="() => OnSignOut.InvokeAsync()" class="w-full text-left px-4 py-2 rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white transition flex items-center gap-3">
+                    Sign Out
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- Main Content -->
+    <div class="w-full md:w-3/4 flex flex-col">
+        <div class="p-4 sm:p-6 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+            <h2 class="text-2xl sm:text-3xl font-bold text-white">Your Schedule</h2>
+
+            <button @onclick="HandleShareLinkAsync" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg transition flex items-center gap-2">
+                Share Link 🔗
+            </button>
+        </div>
+
+        <div class="flex-grow p-4 sm:p-6 pt-0 overflow-y-auto">
+            @if (scheduleEntries.Count > 0)
+            {
+                <div class="space-y-3">
+                    @foreach (var entry in scheduleEntries)
+                    {
+                        <ViewEnteryComponent Entry="entry" OnDelete="HandleDeleteAsync" OnEdit="ShowEditEntryForm" />
+                    }
+                </div>
+            }
+            else
+            {
+                <p class="text-gray-500 text-center py-10">You have no schedule entries. Add one to get started.</p>
+            }
+        </div>
+    </div>
+</div>
+@if (isEntryFormVisible)
+{
+    <ScheduleEntryForm EntryToEdit="currentEntryInForm"
+                       OnSave="HandleEntrySaveAsync"
+                       OnCancel="HideEntryForm"
+                       FormTitle="@(currentEntryInForm.ID == 0 ? "Add New Entry" : "Edit Schedule Entry")" />
+}
+@if (isOwnerFormVisible)
+{
+    <OwnerUpdateForm ownerUpdateModel="LoggedInOwner"
+                     OnSave="HandleOwnerUpdateAsync"
+                     OnCancel="HideOwnerForm" />
+}
+@code
+{
+    [Parameter, EditorRequired]
+    public int ownerId { get; set; }
+    [Parameter]
+    public EventCallback OnSignOut { get; set; }
+    private Owner LoggedInOwner = new();
+    private List<ScheduleEntry> scheduleEntries = [];
+    private bool isOwnerFormVisible = false;
+    private bool isEntryFormVisible = false;
+    private ScheduleEntry currentEntryInForm = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await getOwner();
+        await LoadScheduleEntries();
+    }
+
+    private async ValueTask getOwner() => LoggedInOwner = await OwnerService.RetrieveOwnerByIdAsync(ownerId) ?? new();
+    private async ValueTask LoadScheduleEntries() => scheduleEntries = (await ScheduleEntryService.RetrieveAllScheduleEntriesForOwnerAsync(ownerId)).ToList();
+    private void HideEntryForm() => isEntryFormVisible = false;
+    private void ShowUpdateOwnerForm() => isOwnerFormVisible = true;
+    private void HideOwnerForm() => isOwnerFormVisible = false;
+
+    private void HandleOwnerUpdateAsync(Owner updatedOwner)
+    {
+        LoggedInOwner = updatedOwner;
+        HideOwnerForm();
+        ToastService.ShowSuccess("Changes Saved Successfully!");
+    }
+    private void ShowAddEntryForm()
+    {
+        var now = DateTime.Now;
+        currentEntryInForm = new()
+        {
+            StartDateTime = now,
+            EndDateTime = now.AddHours(1)
+        };
+        isEntryFormVisible = true;
+    }
+    private async Task HandleEntrySaveAsync(ScheduleEntry EntryToSave)
+    {
+        if (EntryToSave.ID == 0)
+        {
+            EntryToSave.OwnerID = LoggedInOwner.ID;
+            await ScheduleEntryService.AddScheduleEntryAsync(EntryToSave);
+            ToastService.ShowSuccess("Entry Saved Successfully!");
+        }
+        else
+        {
+            await ScheduleEntryService.ModifyScheduleEntryAsync(EntryToSave);
+            ToastService.ShowSuccess("Changes Saved Successfully!");
+        }
+
+        isEntryFormVisible = false;
+        await LoadScheduleEntries();
+    }
+    private async Task HandleDeleteAsync(int EntryIdToDelete)
+    {
+        bool confirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to delted this entry?");
+        if (confirmed)
+        {
+            await ScheduleEntryService.RemoveScheduleEntryByIdAsync(EntryIdToDelete);
+            await LoadScheduleEntries();
+        }
+    }
+    private void ShowEditEntryForm(ScheduleEntry entryfromchild)
+    {
+        currentEntryInForm = entryfromchild;
+        isEntryFormVisible = true;
+    }
+    private async Task HandleShareLinkAsync()
+    {
+        try
+        {
+            var apiUrl = $"{NavManager.BaseUri}{LoggedInOwner.RouteToken}";
+
+            await JSRuntime.InvokeVoidAsync("navigator.clipboard.writeText", apiUrl);
+            // await JSRuntime.InvokeVoidAsync("alert", "share link copied to clipboard!");
+            ToastService.ShowSuccess("share link copied to clipboard!");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error generating share link: {ex.Message}");
+            await JSRuntime.InvokeVoidAsync("alert", "Error: Could not generate share link.");
+        }
+    }
+}

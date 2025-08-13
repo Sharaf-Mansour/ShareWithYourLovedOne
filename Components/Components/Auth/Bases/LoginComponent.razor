@@ -1,0 +1,38 @@
+﻿<EditForm Model="owner" OnValidSubmit="HandleLogInAsync">
+    <FluentValidationValidator Options="@(x => x.IncludeRuleSets("Login"))" />
+    <div class="space-y-6">
+        <div>
+            <label for="login-email" class="block text-sm font-medium text-gray-300">Email Address</label>
+            <InputText id="login-email" type="email" class="mt-1 w-full bg-gray-700 border-2 border-gray-600 text-white rounded-lg p-3 focus:border-cyan-500 focus:ring-cyan-500 transition" @bind-Value="owner.Email" />
+            <ValidationMessage For="@(() => owner.Email)" class="text-red-400 text-sm mt-1" />
+        </div>
+        <div>
+            <label for="login-password" class="block text-sm font-medium text-gray-300">Password</label>
+            <InputText id="login-password" type="password" class="mt-1 w-full bg-gray-700 border-2 border-gray-600 text-white rounded-lg p-3 focus:border-cyan-500 focus:ring-cyan-500 transition" @bind-Value="owner.Password" />
+            <ValidationMessage For="@(() => owner.Password)" class="text-red-400 text-sm mt-1" />
+        </div>
+    </div>
+    <ExceptionErrorMessage Message="@errorMessage" />
+    <div class="mt-8">
+        <button type="submit" class="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-lg py-3 rounded-lg transition">Log In</button>
+    </div>
+</EditForm>
+@code {
+    [Parameter]
+    public EventCallback<int> OnLoginSuccess { get; set; }
+    private Owner owner { get; set; }= new Owner();
+    private string? errorMessage;
+
+    private async Task HandleLogInAsync()
+    {
+        errorMessage = null;
+        try
+        {
+            await OnLoginSuccess.InvokeAsync(await OwnerService.LoginAsync(owner));
+        }
+        catch (InvalidCredentialsException)
+        {
+            errorMessage = "Email or Password is incorrect!";
+        }
+    }
+}

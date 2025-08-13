@@ -1,0 +1,61 @@
+﻿<div class="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+    <div class="bg-gray-800 p-8 rounded-2xl shadow-xl w-full max-w-lg">
+        <h2 class="text-2xl font-bold text-white mb-6">Modify Account Details</h2>
+        <EditForm Model="tempOwner" OnValidSubmit="HandleSaveAsync">
+            <FluentValidationValidator />
+            <div class="space-y-4">
+                <div>
+                    <label for="owner-name" class="block text-sm font-medium text-gray-300">Full Name</label>
+                    <InputText id="owner-name" class="mt-1 w-full bg-gray-700 border-2 border-gray-600 text-white rounded-lg p-3" @bind-Value="tempOwner.Name" />
+                    <ValidationMessage For="@(() => tempOwner.Name)" class="text-red-400 text-sm mt-1" />
+                </div>
+                <div>
+                    <label for="owner-email" class="block text-sm font-medium text-gray-300">Email Address</label>
+                    <InputText id="owner-email" type="email" class="mt-1 w-full bg-gray-700 border-2 border-gray-600 text-white rounded-lg p-3" @bind-Value="tempOwner.Email" />
+                    <ValidationMessage For="@(() => tempOwner.Email)" class="text-red-400 text-sm mt-1" />
+                </div>
+                <div>
+                    <label for="owner-password" class="block text-sm font-medium text-gray-300">Password</label>
+                    <InputText id="owner-password" type="password" class="mt-1 w-full bg-gray-700 border-2 border-gray-600 text-white rounded-lg p-3" @bind-Value="tempOwner.Password" />
+                    <ValidationMessage For="@(() => tempOwner.Password)" class="text-red-400 text-sm mt-1" />
+                </div>
+            </div>
+            <ExceptionErrorMessage Message="@errorMessage" />
+            <div class="mt-8 flex justify-end gap-4">
+                <button type="button" @onclick="HandelCancelAsync" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition">
+                    Cancel
+                </button>
+                <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition">
+                    Save Changes
+                </button>
+            </div>
+        </EditForm>
+    </div>
+</div>
+@code {
+    [Parameter, EditorRequired]
+    public Owner ownerUpdateModel { get; set; } = new();
+    [Parameter]
+    public EventCallback<Owner> OnSave { get; set; }
+    [Parameter]
+    public EventCallback OnCancel { get; set; }
+    private string? errorMessage;
+    private Owner tempOwner = new();
+
+    protected override void OnInitialized() => tempOwner = ownerUpdateModel with { };
+    private async Task HandelCancelAsync() => await OnCancel.InvokeAsync();
+
+    private async Task HandleSaveAsync()
+    {
+        errorMessage = null;
+        try
+        {
+            await OwnerService.ModifyOwnerAsync(tempOwner);
+            await OnSave.InvokeAsync(tempOwner);
+        }
+        catch (EmailAlreadyInUse)
+        {
+            errorMessage = "Email already in use";
+        }
+    }
+}

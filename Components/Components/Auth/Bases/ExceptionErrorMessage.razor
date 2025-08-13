@@ -1,0 +1,10 @@
+﻿@if (!string.IsNullOrWhiteSpace(Message))
+{
+    <div class="bg-red-500/10 border border-red-500/30 text-red-300 p-3 rounded-lg mt-6 text-center" role="alert">
+        @Message
+    </div>
+}
+@code {
+    [Parameter, EditorRequired]
+    public string Message { get; set; }
+}

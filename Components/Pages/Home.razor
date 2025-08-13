@@ -1,0 +1,43 @@
+﻿@page "/"
+<div class="min-h-screen bg-gray-900 font-sans flex items-center justify-center p-4 sm:p-6 md:p-8">
+    @if (isLoggedIn)
+    {
+        <DashboardComponent ownerId="loggedInOwner" OnSignOut="HandleSignOut" />
+    }
+    else
+    {
+        <AuthComponent OnAuthSuccess="HandleLoginSuccess" />
+    }
+</div>
+@code {
+    private bool isLoggedIn = false;
+    private int loggedInOwner;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var result = await ProtectedLocalStorage.GetAsync<int>("owner");
+            if (result.Success)
+            {
+                loggedInOwner = result.Value;
+                isLoggedIn = true;
+                StateHasChanged();
+            }
+        }
+    }
+    private async Task HandleLoginSuccess(int ownerId)
+    {
+        loggedInOwner = ownerId;
+        await ProtectedLocalStorage.SetAsync("owner", loggedInOwner);
+        isLoggedIn = true;
+        StateHasChanged();
+    }
+    private void HandleSignOut()
+    {
+        isLoggedIn = false;
+        loggedInOwner = new();
+        ProtectedLocalStorage.DeleteAsync("owner");
+        StateHasChanged();
+    }
+}

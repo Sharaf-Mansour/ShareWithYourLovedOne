@@ -1,0 +1,25 @@
+﻿@using System.Net.Http
+@using System.Net.Http.Json
+@using ShareWithYourLovedOne
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@using ShareWithYourLovedOne.Components
+@using ShareWithYourLovedOne.Components.Components
+@using ShareWithYourLovedOne.Components.Components.Auth
+@using ShareWithYourLovedOne.Components.Components.Auth.Bases
+@using ShareWithYourLovedOne.Components.Components.Dashboard
+@using ShareWithYourLovedOne.Components.Components.Dashboard.Bases
+@using Blazored.FluentValidation
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.AspNetCore.Components.Web.Virtualization
+@using Microsoft.JSInterop
+@using Blazored.Toast
+@using Blazored.Toast.Services
+@using static Microsoft.AspNetCore.Components.Web.RenderMode
+@inject IToastService ToastService
+@inject ProtectedLocalStorage ProtectedLocalStorage
+@inject IOwnerService OwnerService
+@inject IScheduleEntryService ScheduleEntryService
+@inject IJSRuntime JSRuntime
+@inject NavigationManager NavManager
