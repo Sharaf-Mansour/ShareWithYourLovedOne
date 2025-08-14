@@ -1,5 +1,5 @@
 ﻿<EditForm Model="owner" OnValidSubmit="HandleSignUpAsync">
-    <FluentValidationValidator />
+    <FluentValidationValidator Options="@(x => x.IncludeRuleSets("SignUp"))" />
     <div class="space-y-5">
         <div>
             <label for="signup-name" class="block text-sm font-medium text-gray-300">Full Name</label>
