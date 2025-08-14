@@ -3,7 +3,7 @@
   "workspaces": {
     "": {
       "dependencies": {
-        "@tailwindcss/cli": "^4.0.14",
+        "@tailwindcss/cli": "^4.1.11",
         "tailwindcss": "^4.1.11",
       },
     },
