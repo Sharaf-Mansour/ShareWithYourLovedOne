@@ -6,7 +6,6 @@ global using System.Text.Json.Serialization;
 using Arora.Blazor.StateContainer;
 using Arora.GlobalExceptionHandler;
 using Blazored.Toast;
-using Scalar.AspNetCore;
 using ShareWithYourLovedOne.Components;
 using System.Diagnostics;
 
@@ -51,30 +50,7 @@ app.Lifetime.ApplicationStopping.Register(() =>
 
 
 app.MapOpenApi();
-
-app.MapScalarApiReference(options =>
-{
-    options
-        .WithTitle("Simple API")
-        .WithTheme(ScalarTheme.DeepSpace)
-        .WithDarkModeToggle(false)
-        .WithDefaultHttpClient(ScalarTarget.JavaScript, ScalarClient.Axios)
-        .WithCustomCss($$"""
-            .open-api-client-button { display: none !important; }
-            a[target="_blank"].no-underline { display: none !important; }
-            .darklight-reference { display: flex;flex-flow: row;}
-            .darklight-reference::before {
-                content: "LORD AROЯA" !important;
-                font-size: 22px !important;
-                }
-            .darklight-reference::after {
-                content: "{{appVersion}}" !important;
-                font-size: 20px !important;
-            }
-        """);
-    //.WithFavicon(app.Configuration.GetValue<string>("FavIcon") ?? "");
-});
-
+ 
 app.UseHttpsRedirection();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode(); //for backend comment this
